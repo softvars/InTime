@@ -1,0 +1,103 @@
+.header-wrapper {
+  /* background: lightyellow;
+  color: darkturquoise;
+  margin-top: 5px; */
+  background: rgb(232, 232, 219);
+  color: rgb(24, 179, 181);
+  margin-top: 1px;
+}
+.timer-wrapper {
+  margin: 0 0 12px;
+}
+#intimer {
+  color: peru;
+  font-size: large;
+}
+
+button#settings {
+    margin-bottom: 10px;
+}
+.toolbar span {
+  font-size: large;
+  vertical-align: sub;
+}
+.option-flex{
+  display: none;
+}
+.body-wrapper {
+  margin-top: 10px;
+}
+
+.status-info .alert {
+  padding: 5px;
+  color: #97cce6;
+  border-color: #bce8f1;
+  margin-bottom: 10px;
+  font-size: x-large;
+}
+.option-swip button span{
+  line-height: 30px;
+}
+
+.option-swip .swip-out {
+    color: #2e6da4;
+    font-weight: 700;
+}
+
+.ti-plus-sign {
+  margin-right: 4px;
+  margin-left: 4px;
+  vertical-align: bottom;
+  vertical-align: initial;
+}
+.removeEntry{
+    color: white;
+}
+.removeEntry:before {
+  font-size: large;
+  line-height: 24px;
+}
+.margin_bottom_10 {
+    margin-bottom: 10px;
+}
+
+.office-total {
+    font-size: 20px;
+    color: darkcyan;
+}
+.actual-total {
+    font-size: 17px;
+    color: cadetblue;
+}
+.clear-entries, .confirm-edit, button.btn-remove-entry {
+  display:none
+}
+.clear-entries{
+  margin-bottom: 9px;
+}
+.last-row.edit-start {
+    margin-bottom: 90px;
+}
+.confirm-edit {
+    position: fixed;
+    padding: 10px 0;
+    bottom: 0;
+    width: 100%;
+    background-color: rgb(232, 232, 219);
+}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    /* padding: 5px */;
+    vertical-align: middle;
+}
+.rotate {
+    /* Safari */
+    -webkit-transform: rotate(-90deg);
+    /* Firefox */
+    -moz-transform: rotate(-90deg);
+    /* IE */
+    -ms-transform: rotate(-90deg);
+    /* Opera */
+    -o-transform: rotate(-90deg);
+    /* Internet Explorer */
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+}

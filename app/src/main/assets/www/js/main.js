@@ -1,6 +1,5 @@
-
 var storageHelper = new StorageHelper();
-//alert("main.js");
+
 function createEntry(lbl, val) {
     var ins = storageHelper.get(KEY_ENTRIES, []);
     if(lbl) {
@@ -119,7 +118,6 @@ renderTime.render();
 function doIn(){
     storageHelper.set(KEY_UC_STATE, ENTRY_IN);
     renderTimes(ENTRY_IN, (new Date()).getTime());
-//	alert("doIn");
 }
 
 function doOut(){

@@ -86,13 +86,18 @@ function getDiff(a, b) {
 
 /*-----*/
 function getRenderTime(c) {
-    var s = c.separator;
+    var s = c && c.separator;
     var isType12 = c.type == 12 ;
     return {
         render: function() {
-            var t = getTime();
-            var h = isType12 ?  (t.h % c.type) : t.h;
-            document.getElementById(c.elm_id).innerHTML = "" + h + s + t.m + s + t.s + s + t.mi;
+            if(c && c.elm_id) {
+                var t = getTime();
+                var h = isType12 ?  (t.h % c.type) : t.h;
+                var elm = document.getElementById(c.elm_id);
+                if (elm) {
+                    elm.innerHTML = "" + h + s + t.m + s + t.s + s + t.mi;
+                }
+            }
         }
     }
 };

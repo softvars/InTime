@@ -4,7 +4,7 @@ var StorageHelper = function(){};
 StorageHelper.prototype.myStorage = localStorage;
 
 StorageHelper.prototype.get = function(key, def){
-    var val = this.myStorage[key] || def;
+    var val = this.myStorage.getItem(key) || def;
     try{
         if(typeof val === "string") {
             val = JSON.parse(val);
@@ -15,7 +15,7 @@ StorageHelper.prototype.get = function(key, def){
 StorageHelper.prototype.set = function(key, val){
     if(typeof key === "string") {
         val = (typeof val != "string") ? JSON.stringify(val) : val;
-        this.myStorage[key] = val;
+        this.myStorage.setItem(key, val);
     }
     return val;
 };

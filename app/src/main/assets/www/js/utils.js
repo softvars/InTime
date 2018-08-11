@@ -8,12 +8,12 @@ myMap.prototype.key = null;
 myMap.prototype.value = null;
 myMap.prototype.idx = null;
 
-function getDate() {
-    var today = new Date();
+function getDate(d) {
+    var date = d && d.getDate && d|| new Date();
     var t = {};
-    t.d = today.getDate();
-    t.m = today.getMonth() + 1;
-    t.y = today.getYear() + 1900;
+    t.d = date.getDate();
+    t.m = date.getMonth() + 1;
+    t.y = date.getYear() + 1900;
 
     t.d = checkTime(t.d);
     t.m = checkTime(t.m);
@@ -87,15 +87,24 @@ function getDiff(a, b) {
 /*-----*/
 function getRenderTime(c) {
     var s = c && c.separator;
-    var isType12 = c.type == 12 ;
+    var clockType = c.type === 12 || c.type === 24 ? c.type : 12;
     return {
         render: function() {
             if(c && c.elm_id) {
-                var t = getTime();
-                var h = isType12 ?  (t.h % c.type) : t.h;
                 var elm = document.getElementById(c.elm_id);
                 if (elm) {
-                    elm.innerHTML = "" + h + s + t.m + s + t.s + s + t.mi;
+                    var time = '';
+                    if (!c.noDate) {
+                        var d = getDate();
+                        time = d.d + s + d.m + s + d.y;
+                    }
+                    if (!c.noTime) {
+                        var t = getTime();
+                        var h = t.h % clockType;
+                        time +=  c.noDate ? '' : '  '
+                        time +=  h + s + t.m + s + t.s + s + t.mi;
+                    }
+                    elm.innerHTML = time;
                 }
             }
         }

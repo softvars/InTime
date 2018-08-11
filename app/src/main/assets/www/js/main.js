@@ -106,6 +106,7 @@ function renderTimes(lbl, val) {
 var renderTime = getRenderTime({
     elm_id: "intimer",
     separator: ":",
+    noDate: true,
     type: 12
 });
 
@@ -114,6 +115,16 @@ var renderTime = getRenderTime({
     fn: renderTime
 });*/
 renderTime.render();
+
+var renderDate = getRenderTime({
+    elm_id: "entryDate",
+    separator: ":",
+    noTime: true,
+    type: 12
+});
+
+renderDate.render();
+
 
 function doIn(){
     storageHelper.set(KEY_UC_STATE, ENTRY_IN);
@@ -177,8 +188,8 @@ $('.option-flex').on("click", "button.enabled", function(e) {
     }
 });
 
-$('.tools').off("click");
-$('.tools').on("click", "button.edit", function(e) {
+$('.menu').off("click");
+$('.menu').on("click", "button.edit", function(e) {
     var ins = storageHelper.get(KEY_ENTRIES);
     var isEntries = ins && ins.length;
     if(isEntries) {
@@ -207,7 +218,7 @@ $(".confirm-edit").on("click", "button", function(){
     }
     $(".clear-entries, .confirm-edit, button.btn-remove-entry").hide();
     $("body").data("is-edit", false);
-    $('.tools button.edit').removeClass('active');
+    $('.menu button.edit').removeClass('active');
     $(".option-swip button").removeClass('disabled');
     $(".option-swip button").addClass('enabled');
     $(".last-row").removeClass('edit-start');

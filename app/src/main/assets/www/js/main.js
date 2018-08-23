@@ -154,14 +154,14 @@ $('table#tabletime').on("click", "button.btn-remove-entry",function(e) {
     renderTimes();
 });
 
-$('.menu').off("click");
-$('.menu').on("click", "button.strict", function(e) {
+$('.settings-menu.enabled').off("click");
+$('.settings-menu.enabled').on("click", ".toolbar.strict", function(e) {
     $('.option-strict').show();
     $('.option-flex').hide();
     toggleStrictButton($('.option-strict button'), true);
 });
 
-$('.menu').on("click", "button.flex", function(e) {
+$('.settings-menu.enabled').on("click", ".toolbar.flex", function(e) {
     $('.option-strict').hide();
     $('.option-flex').show();
 });
@@ -189,7 +189,7 @@ $('.option-flex').on("click", "button.enabled", function(e) {
 });
 
 $('.menu').off("click");
-$('.menu').on("click", "button.edit", function(e) {
+$('.menu').on("click", "button.edit.enabled", function(e) {
     var ins = storageHelper.get(KEY_ENTRIES);
     var isEntries = ins && ins.length;
     if(isEntries) {
@@ -201,6 +201,9 @@ $('.menu').on("click", "button.edit", function(e) {
         $(".option-swip button").addClass('disabled');
         $(".option-swip button").removeClass('enabled');
         $(".last-row").addClass('edit-start');
+
+        $(".tools .toolbar").addClass('disabled');
+        $(".tools .toolbar").removeClass('enabled');
     }
 });
 
@@ -221,9 +224,46 @@ $(".confirm-edit").on("click", "button", function(){
     $('.menu button.edit').removeClass('active');
     $(".option-swip button").removeClass('disabled');
     $(".option-swip button").addClass('enabled');
+    $(".tools .toolbar").addClass('enabled');
+    $(".tools .toolbar").removeClass('disabled');
     $(".last-row").removeClass('edit-start');
 });
 
+/* $('#myDateListModal').on('shown.bs.modal', function () {
+    var htmlStr = renderDateListModal()
+    $('.modal-body ul').html(htmlStr);
+}) */
+
+$('.tools').off("click");
+$('.tools').on("click", "button.dateList.enabled", function(e) {
+    $(".mainContent").toggle();
+    $(".data-list-wrapper").toggle();
+    $('.tools .toolbar, .menu button.edit').not(this).toggleClass('enabled disabled');
+})
+
+function renderDateListModal() {
+    var html = ''
+    getDateKeys(function(o){
+        html += '<li class="list-group-item">'+o.label+'</li>'
+    })
+    //return html;
+    $('.data-list-wrapper .list-group').html(html);
+}
+$(".data-list-wrapper").hide();
+renderDateListModal()
+
+function getDateKeys(fn) {
+    if(typeof fn === "function") {
+        storageHelper.each(function(k){
+            console.log(k)
+            if(k && k.endsWith(KEY_DAY_ENTRIES)){
+                var l = k.split('_')[0];
+                /* fn({key:k, label:l, value:storageHelper.get(k)}); */
+                fn({key:k, label:l});
+            }
+        })
+    }
+}
 
 function day_init() {
     var todayEntries = storageHelper.get(KEY_DATE_ENTRIES);

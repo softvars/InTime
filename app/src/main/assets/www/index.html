@@ -26,89 +26,91 @@
         <!-- Add your site or application content here -->
         <div class="container-fluid">
             <div class="row header-wrapper">
-                <div  class="text-center">
+                <!-- <div  class="text-center">
                     <div class="">
                         <h1><span><b>!N Time</b></span></h1>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-xs-12 text-center timer-wrapper">
                     <strong><span id="intimer" class="timer in"></span></strong>
                 </div>
             </div>
             <div class="row body-wrapper">
                 <div class="col-xs-12 col-md-10 col-md-offset-1">
-                    <div class="row">
-                      <div class="col-xs-9 text-left menu-wrapper">
+                    <div class="row toolbar-wraper">
+                      <div class="col-xs-7 text-left menu-wrapper">
                         <div class="btn-group menu" role="group" aria-label="...">
-                          <button type="button" class="btn btn-default toolbar strict">Pair
-                            <span class="glyphicon glyphicon-link"></span>
-                          </button>
-                          <button type="button" class="btn btn-default toolbar flex">Flex
-                            <span class="glyphicon glyphicon-random"></span>
-                          </button>
-                          <button type="button" id="edit" class="btn btn-default toolbar edit">
+                          <button type="button" id="edit" class="btn btn-default toolbar edit enabled">
                             <span class="glyphicon glyphicon-edit"></span>
                           </button>
-                            <!-- <button type="button" id="settings" class="btn btn-default toolbar settings">
-                                <span class="glyphicon glyphicon-cog"></span>
-                            </button> -->
                         </div>
                       </div>
-                      <div class="col-xs-3 text-right tools-wrapper">
+                      <div class="col-xs-5 text-right tools-wrapper">
                         <div class="btn-group tools" role="group" aria-label="...">
-                          <!-- <button type="button" id="edit" class="btn btn-default toolbar edit">
-                            <span class="glyphicon glyphicon-edit"></span>
-                          </button> -->
-                          <button type="button" id="settings" class="btn btn-default toolbar settings">
-                              <span class="glyphicon glyphicon-list" data-toggle="modal" data-target="#myDateListModal"></span>
+                          <button type="button" id="dateList" class="btn btn-default toolbar dateList enabled">
+                              <!-- <span class="glyphicon glyphicon-list-alt" data-toggle="modal" data-target="#myDateListModal"></span> -->
+                              <a href="#list" class="toolbar"><span class="glyphicon glyphicon-list-alt"></span></a>
                           </button>
+                          <button type="button" id="settings" class="btn btn-default dropdown-toggle toolbar settings enabled" data-toggle="dropdown" haspopup="true">
+                              <span class="glyphicon glyphicon-cog"></span>
+                          </button>
+                          <ul class="dropdown-menu dropdown-menu-right toolbar settings-menu enabled">
+                            <li><a href="#pair" class="toolbar strict active enabled">Pair <span class="glyphicon glyphicon-link pull-right"></span></a></li>
+                            <li><a href="#flex" class="toolbar flex enabled">Flex <span class="glyphicon glyphicon-random pull-right"></span></a></li>
+                            <!-- <li role="separator" class="divider"></li>-->
+                          </ul>
                         </div>
                       </div>
                     </div>
-                    <div class="row status-info text-center">
-                      <div class="col-xs-12">
-                        <div class="alert clearfix" role="alert">
-                          <strong class="pull-left"><span id="entryDate"></span></strong>
-                          <strong class="pull-right"><span class="user-state">OUT</span></strong>
+                    <div class="mainContent">
+                      <div class="row status-info text-center">
+                        <div class="col-xs-12">
+                          <div class="alert clearfix" role="alert">
+                            <strong class="pull-left"><span id="entryDate"></span></strong>
+                            <strong class="pull-right"><span class="user-state">OUT</span></strong>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row option-swip option-strict margin_bottom_10">
+                        <div class="col-xs-12">
+                            <button type="button" class="btn btn-primary btn-lg btn-block enabled swip-in-out">
+                                  <span class=""> Swip </span>
+                                  <span class="ti-btn-lbl">IN</span>
+                                  <span class="glyphicon glyphicon-plus-sign ti-plus-sign"></span>
+                            </button>
+                        </div>
+                      </div>
+                      <div class="row option-swip option-flex margin_bottom_10">
+                        <div class="col-xs-12">
+                            <button type="button" class="btn btn-primary btn-lg btn-block enabled swip-in">
+                                  <span> Swip </span>
+                                  <span class="ti-btn-lbl">IN</span>
+                                  <span class="glyphicon glyphicon-plus-sign ti-plus-sign"></span>
+                            </button>
+                            <button type="button" class="btn btn-warning btn-lg btn-block enabled swip-out">
+                                  <span> Swip </span>
+                                  <span class="ti-btn-lbl">OUT</span>
+                                  <span class="glyphicon glyphicon-plus-sign ti-plus-sign"></span>
+                            </button>
+                        </div>
+                      </div>
+                      <div class="row clear-entries">
+                        <div class="col-xs-12">
+                          <button type="button" class="btn btn-danger btn-sm  btn-clear-entries"><span>Clear All</span></button>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-12">
+                            <div class="table-responsive">
+                              <table class="table table-hover" id="tabletime">
+                                  <tr class="success"></tr>
+                              </table>
+                            </div>
                         </div>
                       </div>
                     </div>
-                    <div class="row option-swip option-strict margin_bottom_10">
-                      <div class="col-xs-12">
-                          <button type="button" class="btn btn-primary btn-lg btn-block enabled swip-in-out">
-                                <span class=""> Swip </span>
-                                <span class="ti-btn-lbl">IN</span>
-                                <span class="glyphicon glyphicon-plus-sign ti-plus-sign"></span>
-                           </button>
-                      </div>
-                    </div>
-                    <div class="row option-swip option-flex margin_bottom_10">
-                      <div class="col-xs-12">
-                          <button type="button" class="btn btn-primary btn-lg btn-block enabled swip-in">
-                                <span> Swip </span>
-                                <span class="ti-btn-lbl">IN</span>
-                                <span class="glyphicon glyphicon-plus-sign ti-plus-sign"></span>
-                          </button>
-                          <button type="button" class="btn btn-warning btn-lg btn-block enabled swip-out">
-                                <span> Swip </span>
-                                <span class="ti-btn-lbl">OUT</span>
-                                <span class="glyphicon glyphicon-plus-sign ti-plus-sign"></span>
-                          </button>
-                      </div>
-                    </div>
-                    <div class="row clear-entries">
-                      <div class="col-xs-12">
-                        <button type="button" class="btn btn-danger btn-sm  btn-clear-entries"><span>Clear All</span></button>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-xs-12">
-                          <div class="table-responsive">
-                            <table class="table table-hover" id="tabletime">
-                                <tr class="success"></tr>
-                            </table>
-                           </div>
-                      </div>
+                    <div class="data-list-wrapper">
+                      <ul class="list-group"></ul>
                     </div>
                     <!-- <div class="row clear-entries">
                       <div class="col-xs-12">
@@ -139,14 +141,16 @@
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title text-center" id="myModalLabel">Entries History</h4>
+                <h4 class="modal-title text-center" id="myModalLabel">History</h4>
               </div>
               <div class="modal-body">
-                ...
+                <ul class="list-group">
+
+                </ul>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary">View</button>
               </div>
             </div>
           </div>

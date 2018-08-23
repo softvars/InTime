@@ -2,16 +2,20 @@
   /* background: lightyellow;
   color: darkturquoise;
   margin-top: 5px; */
-  background: rgb(232, 232, 219);
+  /* background: rgb(232, 232, 219); */
+  background: #97cce6;
   color: rgb(24, 179, 181);
   margin-top: 1px;
 }
 .timer-wrapper {
-  margin: 0 0 12px;
+  margin: 11px 0 12px;
 }
 #intimer {
-  color: peru;
-  font-size: large;
+  /* color: peru; */
+  font-size: 24px;
+  color: #f7f9fa;
+  /* box-shadow: 0px 0px 12px 1px; */
+  padding: 11px 15px 13px;
 }
 
 button#settings {
@@ -24,16 +28,30 @@ button#settings {
 .option-flex{
   display: none;
 }
+
 .body-wrapper {
   margin-top: 10px;
 }
 
+/* .body-wrapper .toolbar-wraper {
+  border-bottom: 1px solid #97cce669;
+} */
+.mainContent {
+  margin-top: 2px;
+}
+.status-info {
+  background-color: #eeeeee52;
+  box-shadow: 3px 1px 8px 0px #97cce6;
+}
+
 .status-info .alert {
-  padding: 5px;
+  padding: 6px;
   color: #97cce6;
-  border-color: #bce8f1;
-  margin-bottom: 10px;
+  margin-bottom: 1px;
   font-size: x-large;
+}
+.option-swip {
+  margin-top: 10px;
 }
 .option-swip button span{
   line-height: 30px;

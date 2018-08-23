@@ -26,3 +26,13 @@ StorageHelper.prototype.unset = function(key){
     }
     return;
 };
+
+StorageHelper.prototype.each = function(fn){
+    if(typeof fn === "function") {
+        var size = this.myStorage.length
+        for(var i=0; i<size; i++){
+            var key = this.myStorage.key(i);
+            fn(key);
+        }
+    }
+};

@@ -112,15 +112,16 @@ function renderTimes(lbl, val) {
 var renderTime = getRenderTime({
     elm_id: "intimer",
     separator: ":",
+    type: 12,
     noDate: true,
-    type: 12
+    noMilli: true
 });
 
-/*startTimer({
-    interval : 100,
+startTimer({
+    interval : 1000,
     fn: renderTime
-});*/
-renderTime.render();
+});
+/* renderTime.render(); */
 
 var renderDate = getRenderTime({
     elm_id: "entryDate",
@@ -239,9 +240,18 @@ $(".confirm-edit").on("click", "button", function(){
 
 $('.tools').off("click");
 $('.tools').on("click", "button.dateList.enabled", function(e) {
+    toggleMenu();
+})
+
+function toggleMenu(){
     $(".mainContent").toggle();
     $(".data-list-wrapper").toggle();
-    $('.tools .toolbar, .menu button.edit').not(this).toggleClass('enabled disabled');
+    //$('.tools .toolbar, .menu button.edit').not(this).toggleClass('enabled disabled');
+    $('.toolbar.edit, .toolbar.dateList, .toolbar.goback, .toolbar.dropdown-toggle').toggle();
+}
+//$('.menu').off("click");
+$('.menu').on("click", "button.goback.enabled", function(e) {
+    toggleMenu();
 })
 
 $('.data-list-wrapper').off("click");
@@ -264,6 +274,7 @@ function renderDateListModal() {
     $('.data-list-wrapper .date-list-group').html(html);
 }
 $(".data-list-wrapper").hide();
+//$(".goback").hide();
 
 var getDateFromKeys =function(k){
     return (k && k.endsWith(KEY_DAY_ENTRIES) && k.split('_')[0]) || ''
@@ -328,6 +339,7 @@ function toggleStrictButton($elm, noswap) {
 function page_init() {
     //toggleStrictButton($('.option-strict button'), true);
     day_init();
+    $(".goback").hide();
     renderTimes();
 }
 

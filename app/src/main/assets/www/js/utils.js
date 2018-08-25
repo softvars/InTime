@@ -101,8 +101,11 @@ function getRenderTime(c) {
                     if (!c.noTime) {
                         var t = getTime(d);
                         var h = t.h % clockType;
+                        if (c.type) {
+                            h = h === 0 && c.type || h
+                        }
                         time +=  c.noDate ? '' : '  '
-                        time +=  h + s + t.m + s + t.s + s + t.mi;
+                        time +=  h + s + t.m + s + t.s + (c.noMilli ? '' : s + t.mi);
                     }
                     elm.innerHTML = time;
                 }

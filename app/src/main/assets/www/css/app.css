@@ -8,14 +8,19 @@
   margin-top: 1px;
 }
 .timer-wrapper {
-  margin: 11px 0 12px;
+  /* margin: 11px 0 12px; */
+  background-image: linear-gradient(to right, #b3d4fc, #f7f9fa, #f7f9fa, #b3d4fc);
 }
 #intimer {
   /* color: peru; */
-  font-size: 24px;
-  color: #f7f9fa;
+  /* font-size: 24px; */
+  /* color: #f7f9fa; */
+  color: #076797;
+  float: right;
+  padding-right: 0;
+  margin-right: -11px;
   /* box-shadow: 0px 0px 12px 1px; */
-  padding: 11px 15px 13px;
+  /* padding: 11px 15px 13px; */
 }
 
 button#settings {
@@ -36,6 +41,7 @@ button#settings {
 /* .body-wrapper .toolbar-wraper {
   border-bottom: 1px solid #97cce669;
 } */
+
 .mainContent {
   margin-top: 2px;
 }
@@ -97,7 +103,7 @@ button#settings {
   float: right;
 }
 .last-row.edit-start {
-    margin-bottom: 90px;
+    margin-bottom: 45px;
 }
 .confirm-edit {
     position: fixed;
@@ -109,7 +115,7 @@ button#settings {
     background-color: rgba(34, 34, 28, 0.67);
 }
 .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
-    /* padding: 5px */;
+    /* padding: 5px; */
     vertical-align: middle;
 }
 .rotate {

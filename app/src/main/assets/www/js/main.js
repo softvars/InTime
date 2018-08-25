@@ -1,34 +1,39 @@
 var storageHelper = new StorageHelper();
 
+function getEntries() {
+    //return storageHelper.get(KEY_ENTRIES, []);
+    return storageHelper.get(userCurrentDate, []);
+}
 function createEntry(lbl, val) {
-    var ins = storageHelper.get(KEY_ENTRIES, []);
+    var ins = getEntries();
     if(lbl) {
         ins.push(new myMap(lbl, val, ins.length));
-        storageHelper.set(KEY_ENTRIES, ins);
-        storageHelper.set(KEY_DATE_ENTRIES, ins);
+        //storageHelper.set(KEY_ENTRIES, ins);
+        storageHelper.set(userCurrentDate, ins);
     }
     return ins;
 }
-function updateView(ins){
-    ins = ins || storageHelper.get(KEY_ENTRIES, []);
-    var uc_state = storageHelper.get(KEY_UC_STATE);
-    if(ins.length == 0) {
-        if(uc_state == ENTRY_IN) {
-            storageHelper.set(KEY_UC_STATE, ENTRY_OUT);
-            toggleStrictButton($('.option-strict button'), true);
-        }
-        $(".clear-entries").hide();
-    } else {
+function getLastEntryState(ins) {
+    ins = ins || getEntries();
+    var uc_state = ENTRY_OUT
+    if(ins.length > 0) {
         var lastEntry = ins[ins.length-1] ;
-        if(lastEntry && lastEntry.key ) {
-          storageHelper.set(KEY_UC_STATE, lastEntry.key);
-          toggleStrictButton($('.option-strict button'), true);
-       }
-   }
+        uc_state = lastEntry && lastEntry.key
+    }
+    return uc_state; 
+}
+function updateView(ins){
+    ins = ins || getEntries();
+    var uc_state = getLastEntryState(ins)
+    if(ins.length === 0) {
+        $(".clear-entries").hide();
+    }
+    storageHelper.set(KEY_UC_STATE, uc_state);
+    toggleStrictButton($('.option-strict button'), true);
 }
 
 function removeEntry(i) {
-    var ins = storageHelper.get(KEY_ENTRIES, []);
+    var ins = getEntries();
     if(i >= 0 && i < ins.length) {
         ins.splice(i, 1);
         var nextEntry = ins[i];
@@ -36,21 +41,19 @@ function removeEntry(i) {
             nextEntry.p = nextEntry.m = null;
             ins[i] = nextEntry;
         }
-        storageHelper.set(KEY_ENTRIES, ins);
-        storageHelper.set(KEY_DATE_ENTRIES, ins);
-        updateView(ins);
+        //storageHelper.set(KEY_ENTRIES, ins);
+        storageHelper.set(userCurrentDate, ins);
+        //updateView(ins);
 	}
     return ins;
 }
 
 function renderTimes(lbl, val) {
-    setUserStateText(storageHelper.get(KEY_UC_STATE));
-
     var rows = [], _rows = [];
     var ins = createEntry(lbl, val);
     var isEntries = ins && ins.length;
+    var total = 0, ntotal =0, n2total=0;
     if(isEntries) {
-        var total = 0, ntotal =0, n2total=0;
         ins.forEach(function(a, i, arr){
             if(!(a && a.value)) {
                 return;
@@ -77,16 +80,17 @@ function renderTimes(lbl, val) {
 
             rows.push('<tr class="'+CONTEXT[a.key]+'"><td>'+time+'</td><td>'+ _diff +'</td><td class="text-right"><button type="button" data-i="'+i+'" class="btn-remove-entry btn btn-danger btn-xs"> <span data-i="'+i+'" class="removeEntry glyphicon glyphicon-remove-sign"></span></button></td></tr>');
         });
-        var _total = getTimeFromTSDiff(total);
-        var _ntotal = getTimeFromTSDiff(ntotal);
-        var _n2total = getTimeFromTSDiff(n2total);
-        _rows.push('<tr class=""><td><strong>Total</strong></td><td>'+ _total.m +'</td><td>'+total+'</td></tr>');
-        _rows.push('<tr class="office-total"><td><strong>Total IN</strong></td><td><strong>'+ _ntotal.m +'</strong></td><td>'+ntotal+'</td></tr>');
-        _rows.push('<tr class="actual-total"><td><strong>Actual</strong></td><td><strong>'+ _n2total.m +'</strong></td><td>'+n2total+'</td></tr>');
-        storageHelper.set(KEY_ENTRIES, ins);
-        storageHelper.set(KEY_DATE_ENTRIES, ins);
-        storageHelper.set('entriesTimeTotal', total);
     }
+    var _total = getTimeFromTSDiff(total);
+    var _ntotal = getTimeFromTSDiff(ntotal);
+    var _n2total = getTimeFromTSDiff(n2total);
+    _rows.push('<tr class=""><td><strong>Total</strong></td><td>'+ _total.m +'</td><td>'+total+'</td></tr>');
+    _rows.push('<tr class="office-total"><td><strong>Total IN</strong></td><td><strong>'+ _ntotal.m +'</strong></td><td>'+ntotal+'</td></tr>');
+    _rows.push('<tr class="actual-total"><td><strong>Actual</strong></td><td><strong>'+ _n2total.m +'</strong></td><td>'+n2total+'</td></tr>');
+    //storageHelper.set(KEY_ENTRIES, ins);
+    storageHelper.set(userCurrentDate, ins);
+    storageHelper.set(KEY_TOTAL_TIME, total);
+
     var htmlStr = _rows.join('') + rows.join('');
     $('#tabletime').html(htmlStr);
     if(isEntries) {
@@ -95,6 +99,8 @@ function renderTimes(lbl, val) {
             $(".clear-entries, button.btn-remove-entry").show();
         }
     }
+    updateView(ins);
+    setUserStateText(storageHelper.get(KEY_UC_STATE));
 }
 
 //var in_timer_elm_id = 'intimer';
@@ -123,24 +129,21 @@ var renderDate = getRenderTime({
     type: 12
 });
 
-renderDate.render();
-
-
 function doIn(){
-    storageHelper.set(KEY_UC_STATE, ENTRY_IN);
+    //storageHelper.set(KEY_UC_STATE, ENTRY_IN);
     renderTimes(ENTRY_IN, (new Date()).getTime());
 }
 
 function doOut(){
-    storageHelper.set(KEY_UC_STATE, ENTRY_OUT);
+    //storageHelper.set(KEY_UC_STATE, ENTRY_OUT);
     renderTimes(ENTRY_OUT, (new Date()).getTime());
 }
 
 $(".btn-clear-entries").off("click");
 $(".btn-clear-entries").on("click", function() {
-    storageHelper.unset(KEY_ENTRIES);
-    storageHelper.set(KEY_UC_STATE, ENTRY_OUT);
-    toggleStrictButton($('.option-strict button'), true);
+    storageHelper.unset(userCurrentDate);
+    //storageHelper.set(KEY_UC_STATE, ENTRY_OUT);
+    //toggleStrictButton($('.option-strict button'), true);
     renderTimes();
     $(".clear-entries").hide();
 });
@@ -190,7 +193,7 @@ $('.option-flex').on("click", "button.enabled", function(e) {
 
 $('.menu').off("click");
 $('.menu').on("click", "button.edit.enabled", function(e) {
-    var ins = storageHelper.get(KEY_ENTRIES);
+    var ins = getEntries();
     var isEntries = ins && ins.length;
     if(isEntries) {
         $("body").data("is-edit", true);
@@ -214,9 +217,9 @@ $(".confirm-edit").on("click", "button", function(){
         //done
     } else if($this.hasClass("btn-cancel-edit")) {
         var ins = storageHelper.get(KEY_ENTRIES_UNDO, []);
-        storageHelper.set(KEY_ENTRIES, ins);
-        storageHelper.set(KEY_DATE_ENTRIES, ins);
-        updateView(ins);
+        //storageHelper.set(KEY_ENTRIES, ins);
+        storageHelper.set(userCurrentDate, ins);
+        //updateView(ins);
         renderTimes();
     }
     $(".clear-entries, .confirm-edit, button.btn-remove-entry").hide();
@@ -241,23 +244,37 @@ $('.tools').on("click", "button.dateList.enabled", function(e) {
     $('.tools .toolbar, .menu button.edit').not(this).toggleClass('enabled disabled');
 })
 
+$('.data-list-wrapper').off("click");
+$('.data-list-wrapper').on("click", ".date-list", function(e) {
+    $('.tools button.dateList.enabled').trigger( "click" );
+    userCurrentDate = $(this).data('date-key');
+    storageHelper.set(KEY_UC_DATE, userCurrentDate);
+    $('.data-list-wrapper .date-list').not(this).removeClass('active');
+    $(this).addClass('active');
+    page_init();
+    //renderDateListModal();
+})
+
 function renderDateListModal() {
     var html = ''
     getDateKeys(function(o){
-        html += '<li class="list-group-item">'+o.label+'</li>'
+        html += '<li role="presentation" class="date-list" data-date-key="'+o.key+'"><a href="#">'+o.label+'</a></li>'
     })
     //return html;
-    $('.data-list-wrapper .list-group').html(html);
+    $('.data-list-wrapper .date-list-group').html(html);
 }
 $(".data-list-wrapper").hide();
-renderDateListModal()
+
+var getDateFromKeys =function(k){
+    return (k && k.endsWith(KEY_DAY_ENTRIES) && k.split('_')[0]) || ''
+};
 
 function getDateKeys(fn) {
     if(typeof fn === "function") {
         storageHelper.each(function(k){
             console.log(k)
-            if(k && k.endsWith(KEY_DAY_ENTRIES)){
-                var l = k.split('_')[0];
+            var l = getDateFromKeys(k)
+            if(l){
                 /* fn({key:k, label:l, value:storageHelper.get(k)}); */
                 fn({key:k, label:l});
             }
@@ -265,13 +282,27 @@ function getDateKeys(fn) {
     }
 }
 
+var userCurrentDate = KEY_DATE_ENTRIES
+storageHelper.set(KEY_UC_DATE, KEY_DATE_ENTRIES);
+
 function day_init() {
-    var todayEntries = storageHelper.get(KEY_DATE_ENTRIES);
+    //userCurrentDate = storageHelper.get(KEY_UC_DATE);
+    var todayEntries = storageHelper.get(userCurrentDate);
     if(!(todayEntries)) {
-        storageHelper.set(KEY_ENTRIES, []);
-        storageHelper.set(KEY_DATE_ENTRIES, []);
-        storageHelper.set(KEY_UC_STATE, ENTRY_OUT);
+        //storageHelper.set(KEY_ENTRIES, []);
+        storageHelper.set(userCurrentDate, []);
+        //storageHelper.set(KEY_UC_STATE, ENTRY_OUT);
     }
+    var l = getDateFromKeys(userCurrentDate)
+    if (l){
+        var dateStr = l.substring(4, 0) + '/' + l.substring(6, 4)+ '/' + l.substring(6)
+        var d = new Date(dateStr);
+        renderDate.render(d);
+    }
+    //userCurrentDate = storageHelper.get(KEY_UC_DATE);
+    /* if(!userCurrentDate) {
+        userCurrentDate = KEY_DATE_ENTRIES
+    } */
     //storageHelper.set(KEY_UC_STATE, (storageHelper.get(KEY_UC_STATE) || ENTRY_OUT));
 }
 
@@ -295,11 +326,12 @@ function toggleStrictButton($elm, noswap) {
 }
 
 function page_init() {
-    toggleStrictButton($('.option-strict button'), true);
+    //toggleStrictButton($('.option-strict button'), true);
     day_init();
     renderTimes();
 }
 
 $(function(){
     page_init();
+    renderDateListModal();
 });

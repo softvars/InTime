@@ -89,17 +89,17 @@ function getRenderTime(c) {
     var s = c && c.separator;
     var clockType = c.type === 12 || c.type === 24 ? c.type : 12;
     return {
-        render: function() {
+        render: function(d) {
             if(c && c.elm_id) {
                 var elm = document.getElementById(c.elm_id);
                 if (elm) {
                     var time = '';
                     if (!c.noDate) {
-                        var d = getDate();
+                        var d = getDate(d);
                         time = d.d + s + d.m + s + d.y;
                     }
                     if (!c.noTime) {
-                        var t = getTime();
+                        var t = getTime(d);
                         var h = t.h % clockType;
                         time +=  c.noDate ? '' : '  '
                         time +=  h + s + t.m + s + t.s + s + t.mi;

@@ -78,15 +78,15 @@ function renderTimes(lbl, val) {
             n2total += (i && (a.key == ENTRY_OUT && (prv && prv.key == ENTRY_IN)) ||
              (a.key == ENTRY_IN && (prv && prv.key == ENTRY_IN) )) ? a.p : 0;
 
-            rows.push('<tr class="'+CONTEXT[a.key]+'"><td>'+time+'</td><td>'+ _diff +'</td><td class="text-right"><button type="button" data-i="'+i+'" class="btn-remove-entry btn btn-danger btn-xs"> <span data-i="'+i+'" class="removeEntry glyphicon glyphicon-remove-sign"></span></button></td></tr>');
+            rows.push('<tr class="'+CONTEXT[a.key]+'"><td>'+time+'</td><td class="time-diff">'+ _diff +'</td><td class="text-right"><span class="entryStateSingle">'+a.key+'</span><button type="button" data-i="'+i+'" class="btn-remove-entry btn btn-danger btn-xs"> <span data-i="'+i+'" class="removeEntry glyphicon glyphicon-remove-sign"></span></button></td></tr>');
         });
     }
     var _total = getTimeFromTSDiff(total);
     var _ntotal = getTimeFromTSDiff(ntotal);
     var _n2total = getTimeFromTSDiff(n2total);
-    _rows.push('<tr class=""><td><strong>Total</strong></td><td>'+ _total.m +'</td><td>'+total+'</td></tr>');
-    _rows.push('<tr class="office-total"><td><strong>Total IN</strong></td><td><strong>'+ _ntotal.m +'</strong></td><td>'+ntotal+'</td></tr>');
-    _rows.push('<tr class="actual-total"><td><strong>Actual</strong></td><td><strong>'+ _n2total.m +'</strong></td><td>'+n2total+'</td></tr>');
+    _rows.push('<tr class=""><td><strong>FILO</strong></td><td>'+ _total.m +'</td><td>'+total+'</td></tr>');
+    _rows.push('<tr class="office-total"><td><strong>Flex</strong></td><td><strong>'+ _ntotal.m +'</strong></td><td>'+ntotal+'</td></tr>');
+    _rows.push('<tr class="actual-total"><td><strong>Pair</strong></td><td><strong>'+ _n2total.m +'</strong></td><td>'+n2total+'</td></tr>');
     //storageHelper.set(KEY_ENTRIES, ins);
     storageHelper.set(userCurrentDate, ins);
     storageHelper.set(KEY_TOTAL_TIME, total);
@@ -122,6 +122,13 @@ startTimer({
     fn: renderTime
 });
 /* renderTime.render(); */
+var renderTodayDate = getRenderTime({
+    elm_id: "intimerDate",
+    separator: ":",
+    noTime: true,
+    type: 12
+});
+renderTodayDate.render();
 
 var renderDate = getRenderTime({
     elm_id: "entryDate",
@@ -246,32 +253,91 @@ $('.tools').on("click", "button.dateList.enabled", function(e) {
 function toggleMenu(){
     $(".mainContent").toggle();
     $(".data-list-wrapper").toggle();
+    setDateListCheckBox(false);
     //$('.tools .toolbar, .menu button.edit').not(this).toggleClass('enabled disabled');
-    $('.toolbar.edit, .toolbar.dateList, .toolbar.goback, .toolbar.dropdown-toggle').toggle();
+    $('.toolbar.edit, .toolbar.dateList, .toolbar.goback, .toolbar.edit-list, .toolbar.dropdown-toggle').toggle();
 }
-//$('.menu').off("click");
+
 $('.menu').on("click", "button.goback.enabled", function(e) {
     toggleMenu();
+    $('.toolbar.edit-list, .toolbar.edit-close, .toolbar.clear-all, .toolbar.select-all, .toolbar.delete-date-list, .checkbox-wrapper').hide();
+})
+
+function toggleDateListEdit(){
+    $('.toolbar.edit-list, .toolbar.edit-close, .toolbar.clear-all, .toolbar.select-all, .toolbar.delete-date-list ').toggle();
+    $(".checkbox-wrapper").toggle();
+}
+
+$('.tools').on("click", "button.edit-list.enabled", function(e) {
+    toggleDateListEdit();
+})
+
+var deleteDateKeyArray = {}
+
+function setDateListCheckBox(setval) {
+    var allckeck = $(".data-list-wrapper .date-list .delete-date");
+    deleteDateKeyArray = {}
+    if(setval) {
+        getDateKeys(function(o){
+            deleteDateKeyArray[o.key] = setval
+        })
+    }
+    for (var i = 0 ; i< allckeck.length; i++) {
+        $(allckeck[i]).prop('checked', setval);
+    }
+}
+$('.tools').on("click", "button.edit-close.enabled", function(e) {
+    setDateListCheckBox(false)
+    toggleDateListEdit();
+})
+$('.tools').on("click", "button.clear-all.enabled", function(e) {
+    setDateListCheckBox(false)
+})
+$('.tools').on("click", "button.select-all.enabled", function(e) {
+    setDateListCheckBox(true)
 })
 
 $('.data-list-wrapper').off("click");
 $('.data-list-wrapper').on("click", ".date-list", function(e) {
-    $('.tools button.dateList.enabled').trigger( "click" );
-    userCurrentDate = $(this).data('date-key');
-    storageHelper.set(KEY_UC_DATE, userCurrentDate);
-    $('.data-list-wrapper .date-list').not(this).removeClass('active');
-    $(this).addClass('active');
-    page_init();
-    //renderDateListModal();
+    //$(e.target).not('.checkbox-wrapper');
+    var isDateEditOn = $('.toolbar.edit-close').css('display') === 'block'
+    var targetElem = $(e.target);
+    var curTargetElem = $(e.currentTarget);
+    var isDeleteDate = targetElem.hasClass('delete-date');
+    if(isDateEditOn || isDeleteDate) {
+        var dateKey = curTargetElem && curTargetElem.data('date-key');
+        /* if(isDeleteDate) {
+            dateKey =  targetElem.parents && targetElem.parents('.date-list').data('date-key');
+        } else { */
+        if(!isDeleteDate) {
+            targetElem = curTargetElem.find('.delete-date')
+            targetElem[0].checked = !targetElem[0].checked
+        }
+        //var dateKey =  targetElem.parents && targetElem.parents('.date-list').data('date-key');
+        if (dateKey) {
+            deleteDateKeyArray[dateKey] = targetElem[0].checked
+        }
+    } else {
+        //var isDateEditOn = $('.toolbar.edit-close').css('display') === 'block'
+        if (!isDateEditOn) {
+            $('.tools button.dateList.enabled').trigger( "click" );
+            userCurrentDate = $(this).data('date-key');
+            storageHelper.set(KEY_UC_DATE, userCurrentDate);
+            $('.data-list-wrapper .date-list').not(this).removeClass('active');
+            $(this).addClass('active');
+            page_init();
+        }
+    }
 })
 
 function renderDateListModal() {
     var html = ''
     getDateKeys(function(o){
-        html += '<li role="presentation" class="date-list" data-date-key="'+o.key+'"><a href="#">'+o.label+'</a></li>'
+        html += '<li role="presentation" class="date-list'+ ((o.key === userCurrentDate) && ' active' || '') +'" data-date-key="'+o.key+'"><a href="#">'+o.label+'<span class="checkbox-wrapper"><input class="delete-date" type="checkbox" id="inlineCheckbox1"></span></a></li>'
     })
-    //return html;
     $('.data-list-wrapper .date-list-group').html(html);
+    $(".checkbox-wrapper").hide();
+    deleteDateKeyArray = {}
 }
 $(".data-list-wrapper").hide();
 //$(".goback").hide();
@@ -283,7 +349,7 @@ var getDateFromKeys =function(k){
 function getDateKeys(fn) {
     if(typeof fn === "function") {
         storageHelper.each(function(k){
-            console.log(k)
+            //console.log(k)
             var l = getDateFromKeys(k)
             if(l){
                 /* fn({key:k, label:l, value:storageHelper.get(k)}); */
@@ -318,7 +384,10 @@ function day_init() {
 }
 
 function setUserStateText(state){
-    $('.status-info span.user-state').get(0).innerText = state;
+    if (state) { 
+        $('.status-info span.user-state').removeClass('in out').addClass(state.toLowerCase());
+        $('.status-info span.user-state').get(0).innerText = state;
+    }
 }
 
 function setupStrictButton($elm, state) {
@@ -339,7 +408,7 @@ function toggleStrictButton($elm, noswap) {
 function page_init() {
     //toggleStrictButton($('.option-strict button'), true);
     day_init();
-    $(".goback").hide();
+    $(".edit-list, .edit-close, .clear-all, .select-all, .delete-date-list, .goback").hide();
     renderTimes();
 }
 

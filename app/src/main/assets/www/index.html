@@ -32,23 +32,24 @@
                     </div>
                 </div> -->
                 <div class="col-xs-12 text-center timer-wrapper">
+                    <strong><span id="intimerDate" class="col-xs-3"></span></strong>
                     <strong><span id="intimer" class="col-xs-3 timer in"></span></strong>
                 </div>
             </div>
             <div class="row body-wrapper">
                 <div class="col-xs-12 col-md-10 col-md-offset-1">
                     <div class="row toolbar-wraper">
-                      <div class="col-xs-7 text-left menu-wrapper">
+                      <div class="col-xs-3 text-left menu-wrapper">
                         <div class="btn-group menu" role="group" aria-label="...">
-                          <button type="button" id="edit" class="btn btn-default toolbar edit enabled">
-                            <span class="glyphicon glyphicon-edit"></span>
-                          </button>
                           <button type="button" id="goback" class="btn btn-default toolbar goback enabled">
                             <span class="glyphicon glyphicon-arrow-left"></span>
                           </button>
+                          <button type="button" id="edit" class="btn btn-default toolbar edit enabled">
+                            <span class="glyphicon glyphicon-edit"></span>
+                          </button>
                         </div>
                       </div>
-                      <div class="col-xs-5 text-right tools-wrapper">
+                      <div class="col-xs-9 text-right tools-wrapper">
                         <div class="btn-group tools" role="group" aria-label="...">
                           <button type="button" id="dateList" class="btn btn-default toolbar dateList enabled">
                               <!-- <span class="glyphicon glyphicon-list-alt" data-toggle="modal" data-target="#myDateListModal"></span> -->
@@ -62,20 +63,23 @@
                             <li><a href="#flex" class="toolbar flex enabled">Flex <span class="glyphicon glyphicon-random pull-right"></span></a></li>
                             <!-- <li role="separator" class="divider"></li>-->
                           </ul>
+                          <button type="button" id="edit_list" class="btn btn-default toolbar edit-list enabled">
+                            <span class="glyphicon glyphicon-edit"></span>
+                          </button>
+                          <button type="button" id="edit_close" class="btn btn-default toolbar edit-close enabled">
+                            Cancel <!-- <span class="glyphicon glyphicon-remove"></span> -->
+                          </button>
+                          <button type="button" class="btn btn-link toolbar clear-all enabled">Clear</button>
+                          <button type="button" class="btn btn-link toolbar select-all enabled">Select All</button>
+                          <button type="button" id="edit_delete_date" class="btn btn-default toolbar delete-date-list enabled">
+                              <span class="glyphicon glyphicon-trash"></span>
+                            </button>
                         </div>
                       </div>
                     </div>
                     <div class="mainContent">
-                      <div class="row status-info text-center">
-                        <div class="col-xs-12">
-                          <div class="alert clearfix" role="alert">
-                            <strong class="pull-left"><span id="entryDate"></span></strong>
-                            <strong class="pull-right"><span class="user-state">OUT</span></strong>
-                          </div>
-                        </div>
-                      </div>
                       <div class="row option-swip option-strict margin_bottom_10">
-                        <div class="col-xs-12">
+                        <div class="col-xs-offset-2 col-xs-8">
                             <button type="button" class="btn btn-primary btn-lg btn-block enabled swip-in-out">
                                   <span class=""> Swip </span>
                                   <span class="ti-btn-lbl">IN</span>
@@ -85,16 +89,28 @@
                       </div>
                       <div class="row option-swip option-flex margin_bottom_10">
                         <div class="col-xs-12">
+                          <div class="col-xs-6">
                             <button type="button" class="btn btn-primary btn-lg btn-block enabled swip-in">
-                                  <span> Swip </span>
-                                  <span class="ti-btn-lbl">IN</span>
-                                  <span class="glyphicon glyphicon-plus-sign ti-plus-sign"></span>
+                              <span> Swip </span>
+                              <span class="ti-btn-lbl">IN</span>
+                              <span class="glyphicon glyphicon-plus-sign ti-plus-sign"></span>
                             </button>
+                          </div>
+                          <div class="col-xs-6">
                             <button type="button" class="btn btn-warning btn-lg btn-block enabled swip-out">
                                   <span> Swip </span>
                                   <span class="ti-btn-lbl">OUT</span>
                                   <span class="glyphicon glyphicon-plus-sign ti-plus-sign"></span>
                             </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row status-info text-center">
+                        <div class="col-xs-12 status-info-bar">
+                          <div class="alert clearfix" role="alert">
+                            <strong class="pull-left"><span id="entryDate"></span></strong>
+                            <strong class="pull-right"><span class="user-state out">OUT</span></strong>
+                          </div>
                         </div>
                       </div>
                       <div class="row clear-entries">
@@ -102,7 +118,7 @@
                           <button type="button" class="btn btn-danger btn-sm  btn-clear-entries"><span>Clear All</span></button>
                         </div>
                       </div>
-                      <div class="row">
+                      <div class="row tabletime-wrapper">
                         <div class="col-xs-12">
                             <div class="table-responsive">
                               <table class="table table-hover" id="tabletime">

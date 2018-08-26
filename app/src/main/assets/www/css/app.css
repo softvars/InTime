@@ -9,7 +9,12 @@
 }
 .timer-wrapper {
   /* margin: 11px 0 12px; */
-  background-image: linear-gradient(to right, #b3d4fc, #f7f9fa, #f7f9fa, #b3d4fc);
+  /* background-image: linear-gradient(to right, #b3d4fc, #f7f9fa, #f7f9fa, #b3d4fc); */
+  /* background-image: linear-gradient(to right,  #f7f9fa, #f7f9fa, #B3D4FC , #f7f9fa, #f7f9fa); */
+  background-image: linear-gradient(to right,  #f7f9fa, #f7f9fa, #e3eefb , #f7f9fa, #f7f9fa);
+}
+#intimerDate {
+  float: left;
 }
 #intimer {
   /* color: peru; */
@@ -30,6 +35,10 @@ button#settings {
   font-size: large;
   vertical-align: sub;
 }
+.option-flex .col-xs-6 {
+  padding-left: 3px;
+  padding-right: 3px;
+}
 .option-flex{
   display: none;
 }
@@ -45,20 +54,25 @@ button#settings {
 .mainContent {
   margin-top: 2px;
 }
-.status-info {
+/* .status-info {
   background-color: #eeeeee52;
   box-shadow: 3px 1px 8px 0px #97cce6;
+} */
+
+.tabletime-wrapper {
+  margin-top: 10px;
 }
 
 .status-info .alert {
   padding: 6px;
-  color: #97cce6;
+  /* color: #97cce6; */
+  color: #008b8b;
   margin-bottom: 1px;
   font-size: x-large;
 }
-.option-swip {
+/* .option-swip {
   margin-top: 10px;
-}
+} */
 .option-swip button span{
   line-height: 30px;
 }
@@ -97,7 +111,8 @@ button#settings {
   display:none
 }
 .clear-entries{
-  margin-bottom: 9px;
+  margin-bottom: -2px;
+  margin-top: 10px;
 }
 .btn-clear-entries{
   float: right;
@@ -118,6 +133,12 @@ button#settings {
     /* padding: 5px; */
     vertical-align: middle;
 }
+.table>tbody>tr>td.time-diff {
+  text-align: right;
+}
+.entryStateSingle {
+  float: left;
+}
 .rotate {
     /* Safari */
     -webkit-transform: rotate(-90deg);
@@ -129,4 +150,38 @@ button#settings {
     -o-transform: rotate(-90deg);
     /* Internet Explorer */
     filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+}
+.data-list-wrapper {
+  margin-top: 14px;
+}
+
+.user-state.in{   
+  color: #4ee943;
+  text-shadow: 1px 1px 3px #000000;
+  font-stretch: extra-expanded;
+}
+.user-state.out{   
+  color: #e94343;
+  text-shadow: 1px 1px 3px #000000;
+}
+
+.option-swip button {
+  border-radius: 27px;
+}
+.status-info-bar {
+  background-color: #eeeeee52;
+  box-shadow: 0px 0px 8px 0px #97cce6;
+  margin-left: 15px;
+  width: 93%;
+}
+strong.pull-right {
+  width: 51px;
+}
+span.checkbox-wrapper {
+  float: right;
+}
+span.checkbox-wrapper input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
 }

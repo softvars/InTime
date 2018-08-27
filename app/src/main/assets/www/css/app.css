@@ -103,7 +103,7 @@ button#settings {
     font-size: 20px;
     color: darkcyan;
 }
-.actual-total {
+.filo-total, .actual-total {
     font-size: 17px;
     color: cadetblue;
 }
@@ -185,7 +185,14 @@ span.checkbox-wrapper input {
   height: 20px;
   margin: 0;
 }
-
 #myModalLabel {
   color: #d9534f;
 }
+#myHelpModalLabel {
+  color: #1cb811;
+  text-transform: uppercase;
+}
+
+.main-container-wrapper.bg2 {
+  background-color: #edf8f5;
+} 

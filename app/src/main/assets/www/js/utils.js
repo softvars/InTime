@@ -37,9 +37,13 @@ function getTime(a) {
 }
 
 /* add zero in front of numbers < 10 */
-function checkTime(i) {
-    if (i < 10 && i >=0) {
-        i = i && "0" + i || ' - ';
+function checkTime(i, milli) {
+    if(i === 0){
+        i = ' . ';
+    } else if (i < 10 && i > 0) {
+        i = i && ((milli ? "00" : "0") + i);
+    } else if (milli && i < 100 && i >= 10) {
+        i = i && ("0" + i);
     };
     return i;
 }
@@ -72,7 +76,7 @@ function getTimeFromTSDiff(p) {
         }
     }
     diff.m = checkTime(Math.floor(_p.h)) + ":" + checkTime(Math.floor(_p.m)) + ":" + checkTime(Math.floor(_p.s))
-            + ":" + checkTime(Math.floor(_p.mi));
+            + ":" + checkTime(Math.floor(_p.mi), true);
     return diff;
 }
 

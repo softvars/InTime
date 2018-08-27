@@ -61,7 +61,7 @@ function renderTimes(lbl, val) {
             var t = getTime(a.value);
             var time = t.h + ":" + t.m + ":" + t.s;
             a.p  = a.p || 0;
-            var _diff = a.m || " - ", prv = arr[i-1];
+            var _diff = a.m || "00", prv = arr[i-1];
             if(!(a.m)) {
                 if(prv){
                     var diff = getDiff(a, prv);
@@ -84,9 +84,9 @@ function renderTimes(lbl, val) {
     var _total = getTimeFromTSDiff(total);
     var _ntotal = getTimeFromTSDiff(ntotal);
     var _n2total = getTimeFromTSDiff(n2total);
-    _rows.push('<tr class=""><td><strong>FILO</strong></td><td>'+ _total.m +'</td><td>'+total+'</td></tr>');
-    _rows.push('<tr class="office-total"><td><strong>Flex</strong></td><td><strong>'+ _ntotal.m +'</strong></td><td>'+ntotal+'</td></tr>');
-    _rows.push('<tr class="actual-total"><td><strong>Pair</strong></td><td><strong>'+ _n2total.m +'</strong></td><td>'+n2total+'</td></tr>');
+    _rows.push('<tr class="filo-total"><td><strong>FILO</strong></td><td class="time-diff">'+ _total.m +'</td><td>'+total+'</td></tr>');
+    _rows.push('<tr class="office-total"><td><strong>Flex</strong></td><td class="time-diff"><strong>'+ _ntotal.m +'</strong></td><td>'+ntotal+'</td></tr>');
+    _rows.push('<tr class="actual-total"><td><strong>Pair</strong></td><td class="time-diff"><strong>'+ _n2total.m +'</strong></td><td>'+n2total+'</td></tr>');
     //storageHelper.set(KEY_ENTRIES, ins);
     storageHelper.set(userCurrentDate, ins);
     storageHelper.set(KEY_TOTAL_TIME, total);
@@ -171,6 +171,7 @@ $('.settings-menu.enabled').on("click", ".toolbar.strict", function(e) {
         $('.option-strict').show();
         $('.option-flex').hide();
         toggleStrictButton($('.option-strict button'), true);
+        storageHelper.set(KEY_UC_SETTINGS_MODE, MODE_PAIR);
     }
 });
 
@@ -178,6 +179,7 @@ $('.settings-menu.enabled').on("click", ".toolbar.flex", function(e) {
     if (userCurrentDate === KEY_DATE_ENTRIES) {
         $('.option-strict').hide();
         $('.option-flex').show();
+        storageHelper.set(KEY_UC_SETTINGS_MODE, MODE_FLEX);
     }
 });
 
@@ -286,13 +288,27 @@ function toggleMenu(){
     $(".mainContent").toggle();
     $(".data-list-wrapper").toggle();
     setDateListCheckBox(false);
+    $('.homeview').hide();
+    $('.main-container-wrapper').removeClass('bg2');
     //$('.tools .toolbar, .menu button.edit').not(this).toggleClass('enabled disabled');
     $('.toolbar.edit, .toolbar.dateList, .toolbar.goback, .toolbar.edit-list, .toolbar.dropdown-toggle').toggle();
 }
-
+function toggleHomeView(){
+    var isToday = userCurrentDate === KEY_DATE_ENTRIES;
+    $('.homeview').css('display', isToday ? 'none' : 'block');
+    $('.main-container-wrapper').toggleClass('bg2', !isToday);
+    $('.option-swip, .setting-mode').css('display', isToday ? 'block' : 'none');
+    var mode = storageHelper.get(KEY_UC_SETTINGS_MODE);
+    if (mode === MODE_FLEX) {
+        $('.option-strict').hide();
+    } else {
+        $('.option-flex').hide();
+    }
+}
 $('.menu').on("click", "button.goback.enabled", function(e) {
     toggleMenu();
-    $('.homeview, .toolbar.edit-list, .toolbar.clear-all, .toolbar.select-all, .toolbar.delete-date-list, .checkbox-wrapper').hide();
+    $('.toolbar.edit-list, .toolbar.clear-all, .toolbar.select-all, .toolbar.delete-date-list, .checkbox-wrapper').hide();
+    toggleHomeView();
 })
 
 $('.menu').on("click", "button.homeview.enabled", function(e) {
@@ -433,12 +449,9 @@ var userCurrentDate = KEY_DATE_ENTRIES
 storageHelper.set(KEY_UC_DATE, KEY_DATE_ENTRIES);
 
 function day_init() {
-    //userCurrentDate = storageHelper.get(KEY_UC_DATE);
     var todayEntries = storageHelper.get(userCurrentDate);
     if(!(todayEntries)) {
-        //storageHelper.set(KEY_ENTRIES, []);
         storageHelper.set(userCurrentDate, []);
-        //storageHelper.set(KEY_UC_STATE, ENTRY_OUT);
     }
     var l = getDateFromKeys(userCurrentDate)
     if (l){
@@ -446,21 +459,7 @@ function day_init() {
         var d = new Date(dateStr);
         renderDate.render(d);
     }
-    /* if(userCurrentDate != KEY_DATE_ENTRIES) {
-        $(".option-swip button").addClass('disabled').removeClass('enabled');
-        //$(".option-swip button").removeClass('enabled');
-    } else {
-        $(".option-swip button").removeClass('disabled').addClass('enabled');
-        //$(".option-swip button").addClass('enabled');    
-    } */
-    $('.option-swip').css('display', userCurrentDate === KEY_DATE_ENTRIES ? 'block' : 'none');
-    $('.homeview').css('display', userCurrentDate !== KEY_DATE_ENTRIES ? 'block' : 'none');
-    $('.option-flex').hide();
-    //userCurrentDate = storageHelper.get(KEY_UC_DATE);
-    /* if(!userCurrentDate) {
-        userCurrentDate = KEY_DATE_ENTRIES
-    } */
-    //storageHelper.set(KEY_UC_STATE, (storageHelper.get(KEY_UC_STATE) || ENTRY_OUT));
+    toggleHomeView();
 }
 
 function setUserStateText(state){

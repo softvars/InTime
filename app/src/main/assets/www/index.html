@@ -24,7 +24,7 @@
         <![endif]-->
 
         <!-- Add your site or application content here -->
-        <div class="container-fluid">
+        <div class="container-fluid main-container-wrapper">
             <div class="row header-wrapper">
                 <!-- <div  class="text-center">
                     <div class="">
@@ -55,28 +55,38 @@
                       <div class="col-xs-8 text-right tools-wrapper">
                         <div class="btn-group tools" role="group" aria-label="...">
                           <button type="button" id="dateList" class="btn btn-default toolbar dateList enabled">
-                              <!-- <span class="glyphicon glyphicon-list-alt" data-toggle="modal" data-target="#myDateListModal"></span> -->
                               <a href="#list" class="toolbar"><span class="glyphicon glyphicon-list-alt"></span></a>
                           </button>
                           <button type="button" id="settings" class="btn btn-default dropdown-toggle toolbar settings enabled" data-toggle="dropdown" haspopup="true">
                               <span class="glyphicon glyphicon-cog"></span>
                           </button>
                           <ul class="dropdown-menu dropdown-menu-right toolbar settings-menu enabled">
-                            <li><a href="#pair" class="toolbar strict active enabled">Pair <span class="glyphicon glyphicon-link pull-right"></span></a></li>
-                            <li><a href="#flex" class="toolbar flex enabled">Flex <span class="glyphicon glyphicon-random pull-right"></span></a></li>
-                            <!-- <li role="separator" class="divider"></li>-->
+                            <li class="setting-mode">
+                              <a href="#pair" class="toolbar strict active enabled">Pair
+                                <span class="glyphicon glyphicon-link pull-right"></span>
+                              </a>
+                            </li>
+                            <li class="setting-mode">
+                              <a href="#flex" class="toolbar flex enabled">Flex
+                                <span class="glyphicon glyphicon-random pull-right"></span>
+                              </a>
+                            </li>
+                            <li role="separator" class="divider setting-mode"></li>
+                            <li class="setting-help">
+                              <a href="#help" class="toolbar help enabled" data-toggle="modal" data-target="#myHelpModal">
+                                Help 
+                                <span class="glyphicon glyphicon-question-sign pull-right"></span>
+                              </a>
+                            </li>
                           </ul>
                           <button type="button" id="edit_list" class="btn btn-default toolbar edit-list enabled">
                             <span class="glyphicon glyphicon-edit"></span>
                           </button>
-                          <button type="button" class="btn btn-link toolbar clear-all enabled">Clear</button>
-                          <button type="button" class="btn btn-link toolbar select-all enabled">Select All</button>
                           <button type="button" id="edit_delete_date" class="btn btn-default toolbar delete-date-list enabled">
                             <span class="glyphicon glyphicon-trash" data-toggle="modal" data-target="#myDateListModal"></span>
                           </button>
-                          <!-- <button type="button" id="edit_close" class="btn btn-default toolbar edit-close enabled">
-                            <span class="glyphicon glyphicon-remove"></span>
-                          </button> -->
+                          <button type="button" class="btn btn-default toolbar clear-all enabled">Clear</button>
+                          <button type="button" class="btn btn-default toolbar select-all enabled">Select All</button>
                         </div>
                       </div>
                     </div>
@@ -157,16 +167,19 @@
                 </div>
             </div>
         </div>
-        <!-- Modal -->
+        <!-- Modal Confirm Delete -->
         <div class="modal fade" id="myDateListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title text-center" id="myModalLabel">Deleting Data</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
+                <h4 class="modal-title text-center" id="myModalLabel">
+                  <span class="glyphicon glyphicon-alert"></span>
+                   CAUTION </h4>
               </div>
               <div class="modal-body">
-                <h5>Please do confirm before deleting it from history, It's a NON-REVERSIBLE action.</h5>
+                <p>Please confirm deleting the history from app storage. </p>
+                <p>This action is a <strong>NONREVERSIBLE</strong>.</p>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-default cancel" data-dismiss="modal">Cancel</button>
@@ -175,6 +188,55 @@
             </div>
           </div>
         </div>
+        <!-- Modal Help -->
+        <div class="modal fade" id="myHelpModal" tabindex="-1" role="dialog" aria-labelledby="myHelpModalLabel">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title text-center" id="myHelpModalLabel">Help</h4>
+                </div>
+                <div class="modal-body">
+                  <p>Total Time Calculation Logic :-</p>
+                  <ul>
+                    <li><strong><u>FILO</u></strong> (First IN Last OUT): Over all in time for the day</li>
+                    <li><strong><u>Flex</u></strong> First IN will be considered in the continues INs. 
+                      Last OUT will be considered in the continues OUTs.</li>
+                    <li><strong><u>Pair</u></strong> This is inverse to Flex. 
+                      Last IN will be considered in the continues INs. first OUT will be considered in the continues OUTs.</li>
+                  </ul>
+                  <p>Settings Menu <span class="glyphicon glyphicon-cog"></span> :-</p>
+                  <ul>
+                    <li><strong>Pair <span class="glyphicon glyphicon-link"></span></strong>
+                      Either In or OUT will be allowed.</li>
+                    <li><strong>Flex <span class="glyphicon glyphicon-random"></span></strong>
+                      Both IN and OUT options can be used anytime.</li>
+                  </ul>
+                  <p>Buttons :-</p>
+                  <ul>
+                    <li><strong>Settings <span class="glyphicon glyphicon-cog"></span></strong>
+                      Shows settings menu.</li>
+                    <li><strong>List <span class="glyphicon glyphicon-list-alt"></span></strong>
+                      To <u>load entries of particular date or remove a date from the date list</u> which you have already created.
+                      <ul>
+                        <li><strong>Back <span class="glyphicon glyphicon-arrow-left"></span></strong>
+                          To close the date list view and also to cancel the edit date list.</li>
+                        <li><strong>Edit <span class="glyphicon glyphicon-edit"></span></strong>
+                          To <u>remove any particular date or all dates</u> from your checked-in history.</li>
+                      </ul>
+                    </li>
+                    <li><strong>Home <span class="glyphicon glyphicon-home"></span></strong>
+                      To <u>reload today's entries</u> in main view.</li>
+                    <li><strong>Edit <span class="glyphicon glyphicon-edit"></span></strong>
+                      Can be used to <u>any particular entry or all entries</u> for the selected date.</li>
+                  </ul>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default close-help" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
         <!-- <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script> -->
         <!-- <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script> -->
 

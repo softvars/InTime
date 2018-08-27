@@ -39,7 +39,7 @@ button#settings {
   padding-left: 3px;
   padding-right: 3px;
 }
-.option-flex{
+.homeview, .option-flex{
   display: none;
 }
 

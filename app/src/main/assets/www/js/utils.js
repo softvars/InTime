@@ -39,7 +39,7 @@ function getTime(a) {
 /* add zero in front of numbers < 10 */
 function checkTime(i) {
     if (i < 10 && i >=0) {
-        i = "0" + i;
+        i = i && "0" + i || ' - ';
     };
     return i;
 }

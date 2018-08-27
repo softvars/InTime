@@ -167,14 +167,18 @@ $('table#tabletime').on("click", "button.btn-remove-entry",function(e) {
 
 $('.settings-menu.enabled').off("click");
 $('.settings-menu.enabled').on("click", ".toolbar.strict", function(e) {
-    $('.option-strict').show();
-    $('.option-flex').hide();
-    toggleStrictButton($('.option-strict button'), true);
+    if (userCurrentDate === KEY_DATE_ENTRIES) {
+        $('.option-strict').show();
+        $('.option-flex').hide();
+        toggleStrictButton($('.option-strict button'), true);
+    }
 });
 
 $('.settings-menu.enabled').on("click", ".toolbar.flex", function(e) {
-    $('.option-strict').hide();
-    $('.option-flex').show();
+    if (userCurrentDate === KEY_DATE_ENTRIES) {
+        $('.option-strict').hide();
+        $('.option-flex').show();
+    }
 });
 
 $('.option-strict').off("click");
@@ -245,6 +249,33 @@ $(".confirm-edit").on("click", "button", function(){
     $('.modal-body ul').html(htmlStr);
 }) */
 
+function dateSelectedForDelete(fn, isAnyOne){
+    for( var dateKey in deleteDateKeyArray) {
+        if(deleteDateKeyArray[dateKey]) {
+            if(typeof fn === "function") {
+                fn(dateKey)
+            }
+            if (isAnyOne) {
+                return dateKey;
+            }
+        }
+    }
+    return false;
+}
+
+$('#myDateListModal').off("click");
+$('#myDateListModal').on("click", "button.submit", function(e) {
+    var isDeletedAnything = false;
+    dateSelectedForDelete(function(dateKey) {
+        storageHelper.unset(dateKey);
+        console.log(dateKey);
+        isDeletedAnything = true;
+    });
+    isDeletedAnything && renderDateListModal();
+    $('#myDateListModal').modal('hide')
+    toggleDateListEdit(true);
+})
+
 $('.tools').off("click");
 $('.tools').on("click", "button.dateList.enabled", function(e) {
     toggleMenu();
@@ -263,9 +294,14 @@ $('.menu').on("click", "button.goback.enabled", function(e) {
     $('.toolbar.edit-list, .toolbar.edit-close, .toolbar.clear-all, .toolbar.select-all, .toolbar.delete-date-list, .checkbox-wrapper').hide();
 })
 
-function toggleDateListEdit(){
-    $('.toolbar.edit-list, .toolbar.edit-close, .toolbar.clear-all, .toolbar.select-all, .toolbar.delete-date-list ').toggle();
-    $(".checkbox-wrapper").toggle();
+function toggleDateListEdit(hideCheckBox){
+    $('.toolbar.edit-list, .toolbar.edit-close, .toolbar.clear-all, .toolbar.select-all').toggle();
+    if (hideCheckBox) {
+        $(".checkbox-wrapper").hide();
+    } else {
+        $(".checkbox-wrapper").toggle();
+    }
+    updateDeleteIcon();
 }
 
 $('.tools').on("click", "button.edit-list.enabled", function(e) {
@@ -285,18 +321,35 @@ function setDateListCheckBox(setval) {
     for (var i = 0 ; i< allckeck.length; i++) {
         $(allckeck[i]).prop('checked', setval);
     }
+    updateDeleteIcon();
 }
 $('.tools').on("click", "button.edit-close.enabled", function(e) {
-    setDateListCheckBox(false)
-    toggleDateListEdit();
+    setDateListCheckBox(false);
+    toggleDateListEdit(true);
+    //updateDeleteIcon();
 })
 $('.tools').on("click", "button.clear-all.enabled", function(e) {
     setDateListCheckBox(false)
+    //updateDeleteIcon();
 })
 $('.tools').on("click", "button.select-all.enabled", function(e) {
     setDateListCheckBox(true)
 })
-
+/* $('.tools').on("click", "button.delete-date-list.enabled", function(e) {
+    var isDeletedAnything = false;
+    for( var dateKey in deleteDateKeyArray) {
+        if(deleteDateKeyArray[dateKey]) {
+            //storageHelper.unset(dateKey);
+            console.log(dateKey);
+            isDeletedAnything = true;
+        }
+    }
+    isDeletedAnything && renderDateListModal();
+}) */
+function updateDeleteIcon(){
+    var isDateSelectedForDelete = dateSelectedForDelete(null, true);
+    $('.toolbar.delete-date-list').css('display', isDateSelectedForDelete ? 'block' : 'none');
+}
 $('.data-list-wrapper').off("click");
 $('.data-list-wrapper').on("click", ".date-list", function(e) {
     //$(e.target).not('.checkbox-wrapper');
@@ -317,6 +370,7 @@ $('.data-list-wrapper').on("click", ".date-list", function(e) {
         if (dateKey) {
             deleteDateKeyArray[dateKey] = targetElem[0].checked
         }
+        updateDeleteIcon();
     } else {
         //var isDateEditOn = $('.toolbar.edit-close').css('display') === 'block'
         if (!isDateEditOn) {
@@ -376,6 +430,15 @@ function day_init() {
         var d = new Date(dateStr);
         renderDate.render(d);
     }
+    /* if(userCurrentDate != KEY_DATE_ENTRIES) {
+        $(".option-swip button").addClass('disabled').removeClass('enabled');
+        //$(".option-swip button").removeClass('enabled');
+    } else {
+        $(".option-swip button").removeClass('disabled').addClass('enabled');
+        //$(".option-swip button").addClass('enabled');    
+    } */
+    $('.option-swip').css('display', userCurrentDate === KEY_DATE_ENTRIES ? 'block' : 'none');
+    $('.option-flex').hide();
     //userCurrentDate = storageHelper.get(KEY_UC_DATE);
     /* if(!userCurrentDate) {
         userCurrentDate = KEY_DATE_ENTRIES

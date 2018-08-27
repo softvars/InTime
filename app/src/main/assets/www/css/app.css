@@ -185,3 +185,7 @@ span.checkbox-wrapper input {
   height: 20px;
   margin: 0;
 }
+
+#myModalLabel {
+  color: #d9534f;
+}

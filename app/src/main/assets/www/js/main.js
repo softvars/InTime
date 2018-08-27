@@ -1,14 +1,12 @@
 var storageHelper = new StorageHelper();
 
 function getEntries() {
-    //return storageHelper.get(KEY_ENTRIES, []);
     return storageHelper.get(userCurrentDate, []);
 }
 function createEntry(lbl, val) {
     var ins = getEntries();
     if(lbl) {
         ins.push(new myMap(lbl, val, ins.length));
-        //storageHelper.set(KEY_ENTRIES, ins);
         storageHelper.set(userCurrentDate, ins);
     }
     return ins;
@@ -32,6 +30,24 @@ function updateView(ins){
     toggleStrictButton($('.option-strict button'), true);
 }
 
+/* ENTRY_IN,
+ENTRY_OUT 
+(new Date()).getTime());
+ new myMap()*/
+ /** Add Manual Entry Draft */
+function insertEntry(entry) {
+    var ins = getEntries();
+    var i = entry && entry.idx;
+    if(i >= 0 && i <= ins.length) {
+        if(entry && entry.m){
+            entry.p = entry.m = null;
+        }
+        ins.splice(i, 0, entry);
+        storageHelper.set(userCurrentDate, ins);
+	}
+    return ins;
+}
+
 function removeEntry(i) {
     var ins = getEntries();
     if(i >= 0 && i < ins.length) {
@@ -41,9 +57,7 @@ function removeEntry(i) {
             nextEntry.p = nextEntry.m = null;
             ins[i] = nextEntry;
         }
-        //storageHelper.set(KEY_ENTRIES, ins);
         storageHelper.set(userCurrentDate, ins);
-        //updateView(ins);
 	}
     return ins;
 }
@@ -87,7 +101,6 @@ function renderTimes(lbl, val) {
     _rows.push('<tr class="filo-total"><td><strong>FILO</strong></td><td class="time-diff">'+ _total.m +'</td><td>'+total+'</td></tr>');
     _rows.push('<tr class="office-total"><td><strong>Flex</strong></td><td class="time-diff"><strong>'+ _ntotal.m +'</strong></td><td>'+ntotal+'</td></tr>');
     _rows.push('<tr class="actual-total"><td><strong>Pair</strong></td><td class="time-diff"><strong>'+ _n2total.m +'</strong></td><td>'+n2total+'</td></tr>');
-    //storageHelper.set(KEY_ENTRIES, ins);
     storageHelper.set(userCurrentDate, ins);
     storageHelper.set(KEY_TOTAL_TIME, total);
 
@@ -103,12 +116,6 @@ function renderTimes(lbl, val) {
     setUserStateText(storageHelper.get(KEY_UC_STATE));
 }
 
-//var in_timer_elm_id = 'intimer';
-/*function renderTime(elmId) {
-    var t = getTime();
-    document.getElementById(elmId).innerHTML = t.h + _COLON + t.m + _COLON + t.s + _COLON + t.mi;
-}
-*/
 var renderTime = getRenderTime({
     elm_id: "intimer",
     separator: ":",
@@ -121,7 +128,7 @@ startTimer({
     interval : 1000,
     fn: renderTime
 });
-/* renderTime.render(); */
+
 var renderTodayDate = getRenderTime({
     elm_id: "intimerDate",
     separator: ":",
@@ -138,20 +145,16 @@ var renderDate = getRenderTime({
 });
 
 function doIn(){
-    //storageHelper.set(KEY_UC_STATE, ENTRY_IN);
     renderTimes(ENTRY_IN, (new Date()).getTime());
 }
 
 function doOut(){
-    //storageHelper.set(KEY_UC_STATE, ENTRY_OUT);
     renderTimes(ENTRY_OUT, (new Date()).getTime());
 }
 
 $(".btn-clear-entries").off("click");
 $(".btn-clear-entries").on("click", function() {
     storageHelper.unset(userCurrentDate);
-    //storageHelper.set(KEY_UC_STATE, ENTRY_OUT);
-    //toggleStrictButton($('.option-strict button'), true);
     renderTimes();
     $(".clear-entries").hide();
 });
@@ -231,9 +234,7 @@ $(".confirm-edit").on("click", "button", function(){
         //done
     } else if($this.hasClass("btn-cancel-edit")) {
         var ins = storageHelper.get(KEY_ENTRIES_UNDO, []);
-        //storageHelper.set(KEY_ENTRIES, ins);
         storageHelper.set(userCurrentDate, ins);
-        //updateView(ins);
         renderTimes();
     }
     $(".clear-entries, .confirm-edit, button.btn-remove-entry").hide();
@@ -246,10 +247,6 @@ $(".confirm-edit").on("click", "button", function(){
     $(".last-row").removeClass('edit-start');
 });
 
-/* $('#myDateListModal').on('shown.bs.modal', function () {
-    var htmlStr = renderDateListModal()
-    $('.modal-body ul').html(htmlStr);
-}) */
 
 function dateSelectedForDelete(fn, isAnyOne){
     for( var dateKey in deleteDateKeyArray) {
@@ -290,14 +287,16 @@ function toggleMenu(){
     setDateListCheckBox(false);
     $('.homeview').hide();
     $('.main-container-wrapper').removeClass('bg2');
-    //$('.tools .toolbar, .menu button.edit').not(this).toggleClass('enabled disabled');
+    $('.status-info .user-state').removeClass('nocolor');
     $('.toolbar.edit, .toolbar.dateList, .toolbar.goback, .toolbar.edit-list, .toolbar.dropdown-toggle').toggle();
 }
 function toggleHomeView(){
     var isToday = userCurrentDate === KEY_DATE_ENTRIES;
     $('.homeview').css('display', isToday ? 'none' : 'block');
-    $('.main-container-wrapper').toggleClass('bg2', !isToday);
     $('.option-swip, .setting-mode').css('display', isToday ? 'block' : 'none');
+    $('.main-container-wrapper').toggleClass('bg2', !isToday);
+    $('.main-container-wrapper').toggleClass('bg2', !isToday);
+    $('.status-info .user-state').toggleClass('nocolor', !isToday);
     var mode = storageHelper.get(KEY_UC_SETTINGS_MODE);
     if (mode === MODE_FLEX) {
         $('.option-strict').hide();
@@ -351,54 +350,35 @@ $('.menu').on("click", "button.edit-close.enabled", function(e) {
     setDateListCheckBox(false);
     toggleDateListEdit(true);
     $('#goback').addClass('goback').removeClass('edit-close');
-
-    //updateDeleteIcon();
 })
 $('.tools').on("click", "button.clear-all.enabled", function(e) {
     setDateListCheckBox(false)
-    //updateDeleteIcon();
 })
 $('.tools').on("click", "button.select-all.enabled", function(e) {
     setDateListCheckBox(true)
 })
-/* $('.tools').on("click", "button.delete-date-list.enabled", function(e) {
-    var isDeletedAnything = false;
-    for( var dateKey in deleteDateKeyArray) {
-        if(deleteDateKeyArray[dateKey]) {
-            //storageHelper.unset(dateKey);
-            console.log(dateKey);
-            isDeletedAnything = true;
-        }
-    }
-    isDeletedAnything && renderDateListModal();
-}) */
+
 function updateDeleteIcon(){
     var isDateSelectedForDelete = dateSelectedForDelete(null, true);
     $('.toolbar.delete-date-list').css('display', isDateSelectedForDelete ? 'block' : 'none');
 }
 $('.data-list-wrapper').off("click");
 $('.data-list-wrapper').on("click", ".date-list", function(e) {
-    //$(e.target).not('.checkbox-wrapper');
     var isDateEditOn = $('.toolbar.edit-close').css('display') === 'block'
     var targetElem = $(e.target);
     var curTargetElem = $(e.currentTarget);
     var isDeleteDate = targetElem.hasClass('delete-date');
     if(isDateEditOn || isDeleteDate) {
         var dateKey = curTargetElem && curTargetElem.data('date-key');
-        /* if(isDeleteDate) {
-            dateKey =  targetElem.parents && targetElem.parents('.date-list').data('date-key');
-        } else { */
         if(!isDeleteDate) {
             targetElem = curTargetElem.find('.delete-date')
             targetElem[0].checked = !targetElem[0].checked
         }
-        //var dateKey =  targetElem.parents && targetElem.parents('.date-list').data('date-key');
         if (dateKey) {
             deleteDateKeyArray[dateKey] = targetElem[0].checked
         }
         updateDeleteIcon();
     } else {
-        //var isDateEditOn = $('.toolbar.edit-close').css('display') === 'block'
         if (!isDateEditOn) {
             $('.tools button.dateList.enabled').trigger( "click" );
             setCurrentDate(this);
@@ -426,7 +406,6 @@ function renderDateListModal() {
     deleteDateKeyArray = {}
 }
 $(".data-list-wrapper").hide();
-//$(".goback").hide();
 
 var getDateFromKeys =function(k){
     return (k && k.endsWith(KEY_DAY_ENTRIES) && k.split('_')[0]) || ''
@@ -435,10 +414,8 @@ var getDateFromKeys =function(k){
 function getDateKeys(fn) {
     if(typeof fn === "function") {
         storageHelper.each(function(k){
-            //console.log(k)
             var l = getDateFromKeys(k)
             if(l){
-                /* fn({key:k, label:l, value:storageHelper.get(k)}); */
                 fn({key:k, label:l});
             }
         })
@@ -485,7 +462,6 @@ function toggleStrictButton($elm, noswap) {
 }
 
 function page_init() {
-    //toggleStrictButton($('.option-strict button'), true);
     day_init();
     $(".edit-list, .edit-close, .clear-all, .select-all, .delete-date-list, .goback").hide();
     renderTimes();

@@ -155,14 +155,19 @@ button#settings {
   margin-top: 14px;
 }
 
+.user-state{
+  text-shadow: 1px 1px 3px #000000;
+}
 .user-state.in{   
   color: #4ee943;
-  text-shadow: 1px 1px 3px #000000;
   font-stretch: extra-expanded;
 }
 .user-state.out{   
   color: #e94343;
-  text-shadow: 1px 1px 3px #000000;
+}
+.user-state.in.nocolor, .user-state.out.nocolor{   
+  color: #97cce6;
+  font-stretch: extra-expanded;
 }
 
 .option-swip button {

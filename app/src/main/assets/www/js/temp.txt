@@ -1,0 +1,10 @@
+- row header
+- Add input modal. to add a new time entry.
+//- remove highlight borders came over the buttons/links
+    - flex pair ui
+- App settings 
+    - to delete/ remove all the app data.
+- improve UI for time difference 
+
+
+## Affilitated ##

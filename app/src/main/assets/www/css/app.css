@@ -1,3 +1,22 @@
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {  
+  outline: 0;
+  border:none;
+}
+body, html{
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+a:active {
+  text-decoration: none;
+}
 .header-wrapper {
   /* background: lightyellow;
   color: darkturquoise;
@@ -99,11 +118,11 @@ button#settings {
     margin-bottom: 10px;
 }
 
-.office-total {
+.actual-total {
     font-size: 20px;
     color: darkcyan;
 }
-.filo-total, .actual-total {
+.filo-total, .office-total {
     font-size: 17px;
     color: cadetblue;
 }
@@ -132,9 +151,30 @@ button#settings {
 .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
     /* padding: 5px; */
     vertical-align: middle;
+    font-size: 17px;
 }
-.table>tbody>tr>td.time-diff {
+
+#tabletimeTotal .actual-total .time-diff strong {
+  font-size: 22px;
+  color: black;
+}
+
+/* .filo-total .time-diff,
+.office-total .time-diff strong {
+  color: black;
+} */
+
+#tabletimeTotal .time-diff-milli {
+  font-size: 11px;
   text-align: right;
+}
+
+td.time-diff {
+  text-align: right;
+}
+
+td .time-diff-mi {
+  font-size: 11px
 }
 .entryStateSingle {
   float: left;
@@ -199,5 +239,20 @@ span.checkbox-wrapper input {
 }
 
 .main-container-wrapper.bg2 {
-  background-color: #edf8f5;
+  /* background-color: #edf8f5; */
+  background-color: #eff3f2;
 } 
+
+.entryHeader span{
+  font-size: 12px;
+}
+
+.entryHeader .text-align-right{
+  text-align: right;
+}
+
+.table>tbody>tr.entryHeader>td {
+  padding: 2px;
+  color: #ecd3b2;
+  font-weight: bold;
+}

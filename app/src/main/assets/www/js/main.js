@@ -63,7 +63,7 @@ function removeEntry(i) {
 }
 
 function renderTimes(lbl, val) {
-    var rows = [], _rows = [];
+    var rows = [], _rows = [], _rows2 = [];
     var ins = createEntry(lbl, val);
     var isEntries = ins && ins.length;
     var total = 0, ntotal =0, n2total=0;
@@ -76,11 +76,13 @@ function renderTimes(lbl, val) {
             var time = t.h + ":" + t.m + ":" + t.s;
             a.p  = a.p || 0;
             var _diff = a.m || "00", prv = arr[i-1];
+            var _diffMi = a.mi || "000";
             if(!(a.m)) {
                 if(prv){
                     var diff = getDiff(a, prv);
                     a.p = diff.p;
                     a.m = _diff = diff.m;
+                    a.mi = _diffMi = diff.mi;
                     arr[i] = a;
                 }
                 //diff = checkTime(t.h - p.h) + ":" + checkTime(t.m - p.m) + ":" + checkTime(t.s - p.s);
@@ -92,18 +94,28 @@ function renderTimes(lbl, val) {
             n2total += (i && (a.key == ENTRY_OUT && (prv && prv.key == ENTRY_IN)) ||
              (a.key == ENTRY_IN && (prv && prv.key == ENTRY_IN) )) ? a.p : 0;
 
-            rows.push('<tr class="'+CONTEXT[a.key]+'"><td>'+time+'</td><td class="time-diff">'+ _diff +'</td><td class="text-right"><span class="entryStateSingle">'+a.key+'</span><button type="button" data-i="'+i+'" class="btn-remove-entry btn btn-danger btn-xs"> <span data-i="'+i+'" class="removeEntry glyphicon glyphicon-remove-sign"></span></button></td></tr>');
+            rows.push('<tr class="'+CONTEXT[a.key]+'"><td>'+time+'</td><td class="time-diff">'+ _diff +'<span class="time-diff-mi"> '+ _diffMi +'</span></td><td class="text-right"><span class="entryStateSingle">'+a.key+'</span><button type="button" data-i="'+i+'" class="btn-remove-entry btn btn-danger btn-xs"> <span data-i="'+i+'" class="removeEntry glyphicon glyphicon-remove-sign"></span></button></td></tr>');
         });
     }
     var _total = getTimeFromTSDiff(total);
     var _ntotal = getTimeFromTSDiff(ntotal);
     var _n2total = getTimeFromTSDiff(n2total);
-    _rows.push('<tr class="filo-total"><td><strong>FILO</strong></td><td class="time-diff">'+ _total.m +'</td><td>'+total+'</td></tr>');
-    _rows.push('<tr class="office-total"><td><strong>Flex</strong></td><td class="time-diff"><strong>'+ _ntotal.m +'</strong></td><td>'+ntotal+'</td></tr>');
-    _rows.push('<tr class="actual-total"><td><strong>Pair</strong></td><td class="time-diff"><strong>'+ _n2total.m +'</strong></td><td>'+n2total+'</td></tr>');
+/*     _rows2.push('<tr class="filo-total"><td><strong>FILO</strong></td><td class="time-diff">'+ _total.m +'</td><td class="time-diff-milli">'+total+'</td></tr>');
+    _rows2.push('<tr class="actual-total"><td><strong>'+(n2total != ntotal ? 'Paired' : 'In Time' ) + '</strong></td><td class="time-diff"><strong>'+ _n2total.m +'</strong></td><td class="time-diff-milli">'+n2total+'</td></tr>');
+    if(n2total != ntotal) {
+        _rows2.push('<tr class="office-total"><td><strong>Flexed</strong></td><td class="time-diff"><strong>'+ _ntotal.m +'</strong></td><td class="time-diff-milli">'+ntotal+'</td></tr>');
+    } */
+    _rows2.push('<tr class="filo-total"><td><strong>FILO</strong> Total</td><td class="time-diff"><strong>'+ _total.m +'</strong></td></tr>');
+    _rows2.push('<tr class="actual-total"><td>'+(n2total === ntotal ? 'Total ' : '' )+'<strong>'+(n2total === ntotal ? 'In Time' : 'Paired' ) + '</strong></td><td class="time-diff"><strong>'+ _n2total.m +'</strong></td></tr>');
+    if(n2total != ntotal) {
+        _rows2.push('<tr class="office-total"><td><strong>Flexed</strong></td><td class="time-diff"><strong>'+ _ntotal.m +'</strong></td></tr>');
+    }
+    _rows.push('<tr class="entryHeader"><td><span></span></td><td class="entryHeaderMilli text-align-right"><span>hh:mm:ss milli</span></td><td  class="text-align-right"><span>IN / OUT</span></td></tr>');
     storageHelper.set(userCurrentDate, ins);
     storageHelper.set(KEY_TOTAL_TIME, total);
 
+    var htmlStrTotal = _rows2.join('');
+    $('#tabletimeTotal').html(htmlStrTotal);
     var htmlStr = _rows.join('') + rows.join('');
     $('#tabletime').html(htmlStr);
     if(isEntries) {
@@ -213,6 +225,7 @@ $('.menu').on("click", "button.edit.enabled", function(e) {
     var ins = getEntries();
     var isEntries = ins && ins.length;
     if(isEntries) {
+        $('.menu .homeview, .menu .edit').hide();
         $("body").data("is-edit", true);
         storageHelper.set(KEY_ENTRIES_UNDO, ins);
         $(".confirm-edit, button.btn-remove-entry").show();
@@ -237,6 +250,8 @@ $(".confirm-edit").on("click", "button", function(){
         storageHelper.set(userCurrentDate, ins);
         renderTimes();
     }
+    toggleHomeView();
+    $('.menu .edit').show();
     $(".clear-entries, .confirm-edit, button.btn-remove-entry").hide();
     $("body").data("is-edit", false);
     $('.menu button.edit').removeClass('active');

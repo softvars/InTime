@@ -134,6 +134,9 @@
                       <div class="row tabletime-wrapper">
                         <div class="col-xs-12">
                             <div class="table-responsive">
+                              <table class="table table-hover" id="tabletimeTotal">
+                                  <tr class="success"></tr>
+                              </table>
                               <table class="table table-hover" id="tabletime">
                                   <tr class="success"></tr>
                               </table>
@@ -200,10 +203,8 @@
                   <p>Total Time Calculation Logic :-</p>
                   <ul>
                     <li><strong><u>FILO</u></strong> (First IN Last OUT): Over all in time for the day</li>
-                    <li><strong><u>Flex</u></strong> First IN will be considered in the continues INs. 
-                      Last OUT will be considered in the continues OUTs.</li>
-                    <li><strong><u>Pair</u></strong> This is inverse to Flex. 
-                      Last IN will be considered in the continues INs. first OUT will be considered in the continues OUTs.</li>
+                    <li><strong><u>Paired</u></strong> Last IN will be considered in the continues INs. first OUT will be considered in the continues OUTs.</li>
+                    <li><strong><u>Flexed</u></strong> This is inverse to Paired. First IN will be considered in the continues INs. Last OUT will be considered in the continues OUTs.</li>
                   </ul>
                   <p>Settings Menu <span class="glyphicon glyphicon-cog"></span> :-</p>
                   <ul>

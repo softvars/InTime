@@ -233,7 +233,8 @@ span.checkbox-wrapper input {
   height: 20px;
   margin: 0;
 }
-#myModalLabel {
+#myModalLabel,
+#myDataImportModalLabel {
   color: #d9534f;
 }
 #myHelpModalLabel {

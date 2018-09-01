@@ -37,4 +37,8 @@ StorageHelper.prototype.each = function(fn){
     }
 };
 
+StorageHelper.prototype.getLength = function(){
+    return this.myStorage.length;
+};
+
 var storageHelper = new StorageHelper();

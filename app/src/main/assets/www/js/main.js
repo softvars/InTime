@@ -220,10 +220,62 @@ $('.option-flex').on("click", "button.enabled", function(e) {
     }
 });
 
+
+$('#myDataImportModal').off("click");
+$('#myDataImportModal').on("click", "button.submit, button.cancel", function(e) {
+    var $this = $(this);
+    var callback = $('#myDataImportModal').data('callback');
+    callback($this.hasClass("submit"));
+    $('#myDataImportModal').modal('hide');
+});
+
+function confirmOverWrite(callback) {
+    $('#myDataImportModal').data('callback', callback);
+    $('#myDataImportModal').modal('show');
+}
+
+function updateAppWithData_(result, overWrite){
+    var i=0, j=0;
+    for( var key in result) {
+        var isDate = key.endsWith(KEY_DAY_ENTRIES);
+        isDate && i++;
+        var isValue = storageHelper.get(key) !== undefined;
+        if(isDate && isValue) {
+            j++;
+            overWrite && storageHelper.set(key, result[key]);
+        } else {
+            storageHelper.set(key, result[key]);
+        }
+    }
+    app_in_time_init();
+}
+function updateAppWithData(result){
+    var isValue = false, i=0, overWrite = null;
+    for( var key in result) {
+        i++;
+        var isDate = key.endsWith(KEY_DAY_ENTRIES);
+        isValue = isDate && storageHelper.get(key) !== undefined;
+        if(isValue) {
+            confirmOverWrite(function(res){
+                overWrite = res;
+                updateAppWithData_(result, overWrite);
+            });
+            break;
+        } 
+    }
+    if(!isValue && i === Object.keys(result).length){
+        updateAppWithData_(result, overWrite);
+    }
+}
 $('.setting-app-data').off("click");
 $('.setting-app-data').on("click", ".toolbar.app-data-export", function(e) {
-    //var $this= $(this);
     exportAppData();
+});
+$('.setting-app-data').on("click", ".toolbar.app-data-import", function(e) {
+    JSONReader.read(function(result) {
+        console.log(result);
+        updateAppWithData(result);
+    });
 });
 
 $('.menu').off("click");
@@ -250,7 +302,7 @@ $(".confirm-edit").off("click");
 $(".confirm-edit").on("click", "button", function(){
     $this = $(this);
     if($this.hasClass("btn-done-edit")){
-        //done
+        storageHelper.set(KEY_ENTRIES_UNDO, []);
     } else if($this.hasClass("btn-cancel-edit")) {
         var ins = storageHelper.get(KEY_ENTRIES_UNDO, []);
         storageHelper.set(userCurrentDate, ins);
@@ -290,9 +342,16 @@ $('#myDateListModal').on("click", "button.submit", function(e) {
         storageHelper.unset(dateKey);
         console.log(dateKey);
         isDeletedAnything = true;
+        if (dateKey === userCurrentDate) { 
+            userCurrentDate = KEY_DATE_ENTRIES;
+        }  
     });
-    isDeletedAnything && renderDateListModal();
-    $('#myDateListModal').modal('hide')
+    if(isDeletedAnything) {
+        renderDateListModal();
+        updateDateView();
+        renderTimes();    
+    }
+    $('#myDateListModal').modal('hide');
     toggleDateListEdit(true);
     $('#goback').addClass('goback').removeClass('edit-close');
 })
@@ -310,6 +369,7 @@ function toggleMenu(){
     $('.main-container-wrapper').removeClass('bg2');
     $('.status-info .user-state').removeClass('nocolor');
     $('.toolbar.edit, .toolbar.dateList, .toolbar.goback, .toolbar.edit-list, .toolbar.dropdown-toggle').toggle();
+    toggleDateListEditIcon();
 }
 function toggleHomeView(){
     var isToday = userCurrentDate === KEY_DATE_ENTRIES;
@@ -341,6 +401,14 @@ $('.menu').on("click", "button.homeview.enabled", function(e) {
 })
 
 
+function toggleDateListEditIcon(){
+    if (storageHelper.getLength() === 6) {
+        /* var today = storageHelper.get(KEY_DATE_ENTRIES);
+        today && today.length === 0 && $(".toolbar.edit-list").hide();
+        today && today.length !== 0 && $(".toolbar.edit-list").show(); */
+        renderDateListModal();
+    }
+}
 function toggleDateListEdit(hideCheckBox){
     $('.toolbar.edit-list, .toolbar.clear-all, .toolbar.select-all').toggle();
     if (hideCheckBox) {
@@ -348,6 +416,7 @@ function toggleDateListEdit(hideCheckBox){
     } else {
         $(".checkbox-wrapper").toggle();
     }
+    toggleDateListEditIcon();
     updateDeleteIcon();
 }
 
@@ -449,8 +518,7 @@ function getDateKeys(fn) {
 
 var userCurrentDate = KEY_DATE_ENTRIES
 storageHelper.set(KEY_UC_DATE, KEY_DATE_ENTRIES);
-
-function day_init() {
+function updateDateView() {
     var todayEntries = storageHelper.get(userCurrentDate);
     if(!(todayEntries)) {
         storageHelper.set(userCurrentDate, []);
@@ -461,6 +529,9 @@ function day_init() {
         var d = new Date(dateStr);
         renderDate.render(d);
     }
+}
+function day_init() {
+    updateDateView();
     toggleHomeView();
 }
 
@@ -491,8 +562,10 @@ function page_init() {
     $(".edit-list, .edit-close, .clear-all, .select-all, .delete-date-list, .goback").hide();
     renderTimes();
 }
-
-$(function(){
+function app_in_time_init() {
     page_init();
     renderDateListModal();
+}
+$(function(){
+    app_in_time_init();
 });

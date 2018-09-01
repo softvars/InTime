@@ -192,7 +192,7 @@
                    CAUTION </h4>
               </div>
               <div class="modal-body">
-                <p>Please confirm deleting the history from app storage. </p>
+                <p>Please confirm before deleting the history from the app storage. </p>
                 <p>This action is a <strong>NONREVERSIBLE</strong>.</p>
               </div>
               <div class="modal-footer">
@@ -202,6 +202,27 @@
             </div>
           </div>
         </div>
+        <!-- Modal Confirm Data Import Overwrite -->
+        <div class="modal fade" id="myDataImportModal" tabindex="-1" role="dialog" aria-labelledby="myDataImportModalLabel">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
+                  <h4 class="modal-title text-center" id="myDataImportModalLabel">
+                    <!-- <span class="glyphicon glyphicon-alert"></span> -->
+                     Conflict </h4>
+                </div>
+                <div class="modal-body">
+                  <p>Some entries are already exist.</p>
+                  <p>Do you want to Overwrite them ? OR Merge only new entries alone without Overwritting ?</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default cancel" data-dismiss="modal">Merge Import</button>
+                  <button type="button" class="btn btn-danger submit">Overwrite Import</button>
+                </div>
+              </div>
+            </div>
+          </div>
         <!-- Modal Help -->
         <div class="modal fade" id="myHelpModal" tabindex="-1" role="dialog" aria-labelledby="myHelpModalLabel">
             <div class="modal-dialog" role="document">
@@ -258,6 +279,7 @@
         <script src="./js/plugins.js"></script>
         <script src="./js/storage.js"></script>
         <script src="./js/const.js" ></script>
+        <script src="./js/JSONReader.js" ></script>
         <script src="./js/utils.js"></script>
         <script src="./js/main.js"></script>
 

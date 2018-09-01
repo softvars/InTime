@@ -36,3 +36,5 @@ StorageHelper.prototype.each = function(fn){
         }
     }
 };
+
+var storageHelper = new StorageHelper();

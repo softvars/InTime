@@ -1,5 +1,3 @@
-var storageHelper = new StorageHelper();
-
 function getEntries() {
     return storageHelper.get(userCurrentDate, []);
 }
@@ -186,6 +184,7 @@ $('.settings-menu.enabled').on("click", ".toolbar.strict", function(e) {
         $('.option-strict').show();
         $('.option-flex').hide();
         toggleStrictButton($('.option-strict button'), true);
+        $(".setting-mode .strict, .setting-mode .flex").toggleClass('active');
         storageHelper.set(KEY_UC_SETTINGS_MODE, MODE_PAIR);
     }
 });
@@ -194,6 +193,7 @@ $('.settings-menu.enabled').on("click", ".toolbar.flex", function(e) {
     if (userCurrentDate === KEY_DATE_ENTRIES) {
         $('.option-strict').hide();
         $('.option-flex').show();
+        $(".setting-mode .strict, .setting-mode .flex").toggleClass('active');
         storageHelper.set(KEY_UC_SETTINGS_MODE, MODE_FLEX);
     }
 });
@@ -218,6 +218,12 @@ $('.option-flex').on("click", "button.enabled", function(e) {
     } else if(isOut){
        doOut();
     }
+});
+
+$('.setting-app-data').off("click");
+$('.setting-app-data').on("click", ".toolbar.app-data-export", function(e) {
+    //var $this= $(this);
+    exportAppData();
 });
 
 $('.menu').off("click");
@@ -315,8 +321,12 @@ function toggleHomeView(){
     var mode = storageHelper.get(KEY_UC_SETTINGS_MODE);
     if (mode === MODE_FLEX) {
         $('.option-strict').hide();
+        $(".setting-mode .flex").addClass('active');
+        $(".setting-mode .strict").removeClass('active');
     } else {
         $('.option-flex').hide();
+        $(".setting-mode .strict").addClass('active');
+        $(".setting-mode .flex").removeClass('active');
     }
 }
 $('.menu').on("click", "button.goback.enabled", function(e) {

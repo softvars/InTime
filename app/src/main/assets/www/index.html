@@ -71,7 +71,18 @@
                                 <span class="glyphicon glyphicon-random pull-right"></span>
                               </a>
                             </li>
-                            <li role="separator" class="divider setting-mode"></li>
+                            <li role="separator" class="divider"></li>
+                            <li class="setting-app-data">
+                                <a href="#flex" class="toolbar app-data-export enabled">Export
+                                  <span class="glyphicon glyphicon-open pull-right"></span>
+                                </a>
+                              </li>
+                            <li class="setting-app-data">
+                              <a href="#flex" class="toolbar app-data-import enabled">Import
+                                <span class="glyphicon glyphicon-save pull-right"></span>
+                              </a>
+                            </li>
+                            <li role="separator" class="divider"></li>
                             <li class="setting-help">
                               <a href="#help" class="toolbar help enabled" data-toggle="modal" data-target="#myHelpModal">
                                 Help 
@@ -243,10 +254,11 @@
 
         <script src="./js/vendor/jquery-1.12.0.min.js"></script>
         <script src="./js/vendor/bootstrap.min.js"></script>
+        <script src="./js/vendor/FileSaver.min.js"></script>
         <script src="./js/plugins.js"></script>
         <script src="./js/storage.js"></script>
+        <script src="./js/const.js" ></script>
         <script src="./js/utils.js"></script>
-        <script src="./js/const.js"></script>
         <script src="./js/main.js"></script>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->

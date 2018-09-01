@@ -8,6 +8,11 @@ myMap.prototype.key = null;
 myMap.prototype.value = null;
 myMap.prototype.idx = null;
 
+var KEY_DATE_ENTRIES = (function(){
+    var date = getDate();
+    return "" + date.y + date.m + date.d + KEY_DAY_ENTRIES;
+})();
+
 function getDate(d) {
     var date = d && d.getDate && d|| new Date();
     var t = {};
@@ -17,6 +22,7 @@ function getDate(d) {
 
     t.d = checkTime(t.d);
     t.m = checkTime(t.m);
+    t.now = date;
     return t;
 }
 
@@ -30,6 +36,7 @@ function getTime(a) {
 
     t.mi = mi > 944 ? 0 : Math.round((mi / 100));
 
+    //t.h = checkTime(t.h);
     t.m = checkTime(t.m);
     t.s = checkTime(t.s);
     t.mi = checkTime(t.mi);
@@ -43,10 +50,10 @@ function checkTime(i) {
     }
     return i;
 }
-function checkDiffTime(i, milli) {
-    if(i === 0){
+function checkDiffTime(i, milli, noDot) {
+    if(!noDot && i === 0){
         i = ' . ';
-    } else if (i < 10 && i > 0) {
+    } else if (i < 10 && i >= 0) {
         i = i && ((milli ? "00" : "0") + i);
     } else if (milli && i < 100 && i >= 10) {
         i = i && ("0" + i);
@@ -81,7 +88,7 @@ function getTimeFromTSDiff(p) {
             }
         }
     }
-    diff.m = checkDiffTime(Math.floor(_p.h)) + ":" + checkDiffTime(Math.floor(_p.m)) + ":" + checkDiffTime(Math.floor(_p.s));
+    diff.m = checkDiffTime(Math.floor(_p.h), false, true) + ":" + checkDiffTime(Math.floor(_p.m), false, true) + ":" + checkDiffTime(Math.floor(_p.s), false, true);
     diff.mi = checkDiffTime(Math.floor(_p.mi), true);
     return diff;
 }
@@ -140,4 +147,30 @@ function stopTimer() {
         timerAnch = null;
     }
     console.log(timerAnch);
+}
+
+function getDateFormted(date, noTime){
+    date = getDate(date);
+    var time = getTime(date.now);
+    return "" + date.y + date.m + date.d + (noTime ? '' : '_'+checkTime(time.h)+time.m+time.s);
+};
+
+function dataToFileSave(data, fileNamePrefix) {
+    try {
+        var isFileSaverSupported = !!new Blob;
+    } catch (e) {}
+
+    if(isFileSaverSupported && data) {
+        var fileName = 'APP.IN_TIME.DATA.' + (fileNamePrefix || '') + getDateFormted(new Date())+'.json';
+        var blob = new Blob([JSON.stringify(data)], {type: 'text/plain;charset=utf-8'});
+        saveAs(blob, fileName);
+  }
+}
+
+function exportAppData(fileNamePrefix){
+    var data = {};
+    storageHelper.each(function(k){
+        data[k] = storageHelper.get(k);
+    })
+    dataToFileSave(data, fileNamePrefix)
 }

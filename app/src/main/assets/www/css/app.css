@@ -7,6 +7,9 @@
   outline: 0;
   border:none;
 }
+#settings.btn:focus {
+  border:1px solid #ccc;
+}
 body, html{
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-user-select: none;
@@ -252,7 +255,14 @@ span.checkbox-wrapper input {
 }
 
 .table>tbody>tr.entryHeader>td {
-  padding: 2px;
-  color: #ecd3b2;
+  padding: 0 6px 0 0;
+  color: #cebda6;
   font-weight: bold;
+}
+.main-container-wrapper.bg2 .table>tbody>tr.entryHeader>td {
+  color: #c3ae92;
+}
+a.toolbar.active.enabled {
+  background-color: cadetblue;
+  color: white;
 }

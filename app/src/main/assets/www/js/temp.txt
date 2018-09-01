@@ -1,10 +1,14 @@
-- row header
-- Add input modal. to add a new time entry.
+//- row header
 //- remove highlight borders came over the buttons/links
-    - flex pair ui
-- App settings 
-    - to delete/ remove all the app data.
+//- flex pair menu ui : high light selected mode
+//- Export
 - improve UI for time difference 
 
+- Import
+- Add input modal. to add a new time entry.
+- App settings 
+    - to delete/ remove all the app data.
+
+-------------------------
 
 ## Affilitated ##

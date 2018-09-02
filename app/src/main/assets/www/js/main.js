@@ -124,6 +124,7 @@ function renderTimes(lbl, val) {
     }
     updateView(ins);
     setUserStateText(storageHelper.get(KEY_UC_STATE));
+    toggleDateListEditIcon(true);
 }
 
 var renderTime = getRenderTime({
@@ -308,7 +309,6 @@ $(".confirm-edit").on("click", "button", function(){
         storageHelper.set(userCurrentDate, ins);
         renderTimes();
     }
-    toggleHomeView();
     $('.menu .edit').show();
     $(".clear-entries, .confirm-edit, button.btn-remove-entry").hide();
     $("body").data("is-edit", false);
@@ -318,6 +318,7 @@ $(".confirm-edit").on("click", "button", function(){
     $(".tools .toolbar").addClass('enabled');
     $(".tools .toolbar").removeClass('disabled');
     $(".last-row").removeClass('edit-start');
+    toggleHomeView();
 });
 
 
@@ -337,6 +338,7 @@ function dateSelectedForDelete(fn, isAnyOne){
 
 $('#myDateListModal').off("click");
 $('#myDateListModal').on("click", "button.submit", function(e) {
+    $('#goback').addClass('goback').removeClass('edit-close');
     var isDeletedAnything = false;
     dateSelectedForDelete(function(dateKey) {
         storageHelper.unset(dateKey);
@@ -347,13 +349,18 @@ $('#myDateListModal').on("click", "button.submit", function(e) {
         }  
     });
     if(isDeletedAnything) {
-        renderDateListModal();
         updateDateView();
         renderTimes();    
+/*         var today = isAppDateListEmpty();
+        if(today.length === 0){
+            $('.menu button.goback').trigger( "click" );
+        } else {
+            renderDateListModal();
+        } */
     }
-    $('#myDateListModal').modal('hide');
     toggleDateListEdit(true);
-    $('#goback').addClass('goback').removeClass('edit-close');
+    //toggleDateListEditIcon();
+    $('#myDateListModal').modal('hide');
 })
 
 $('.tools').off("click");
@@ -369,7 +376,7 @@ function toggleMenu(){
     $('.main-container-wrapper').removeClass('bg2');
     $('.status-info .user-state').removeClass('nocolor');
     $('.toolbar.edit, .toolbar.dateList, .toolbar.goback, .toolbar.edit-list, .toolbar.dropdown-toggle').toggle();
-    toggleDateListEditIcon();
+    //toggleDateListEditIcon();
 }
 function toggleHomeView(){
     var isToday = userCurrentDate === KEY_DATE_ENTRIES;
@@ -378,6 +385,7 @@ function toggleHomeView(){
     $('.main-container-wrapper').toggleClass('bg2', !isToday);
     $('.main-container-wrapper').toggleClass('bg2', !isToday);
     $('.status-info .user-state').toggleClass('nocolor', !isToday);
+    toggleDateListEditIcon(true);
     var mode = storageHelper.get(KEY_UC_SETTINGS_MODE);
     if (mode === MODE_FLEX) {
         $('.option-strict').hide();
@@ -400,23 +408,34 @@ $('.menu').on("click", "button.homeview.enabled", function(e) {
     setCurrentDate(elm);
 })
 
-
-function toggleDateListEditIcon(){
-    if (storageHelper.getLength() === 6) {
-        /* var today = storageHelper.get(KEY_DATE_ENTRIES);
-        today && today.length === 0 && $(".toolbar.edit-list").hide();
-        today && today.length !== 0 && $(".toolbar.edit-list").show(); */
+function isAppDateListEmpty(){
+    var today = storageHelper.getLength() === 6 && storageHelper.get(KEY_DATE_ENTRIES);
+    return today;
+}
+function toggleDateListEditIcon(isHome){
+    var today = isAppDateListEmpty();
+    if (today) {
+        if (today.length === 0) {
+            $(".toolbar.edit, .toolbar.edit-list, .tools button.dateList, .entryHeader").hide();
+        } else {
+            $(".tools button.dateList, .entryHeader").show();
+            !isHome && $(".toolbar.edit-list").show();
+            isHome && $(".toolbar.edit").show();
+        }
         renderDateListModal();
     }
 }
 function toggleDateListEdit(hideCheckBox){
-    $('.toolbar.edit-list, .toolbar.clear-all, .toolbar.select-all').toggle();
-    if (hideCheckBox) {
-        $(".checkbox-wrapper").hide();
-    } else {
-        $(".checkbox-wrapper").toggle();
-    }
-    toggleDateListEditIcon();
+    //if (storageHelper.getLength() > 6) {
+        $('.toolbar.edit-list, .toolbar.clear-all, .toolbar.select-all').toggle();
+
+        if (hideCheckBox) {
+            $(".checkbox-wrapper").hide();
+        } else {
+            $(".checkbox-wrapper").toggle();
+        }
+    //}
+    //toggleDateListEditIcon();
     updateDeleteIcon();
 }
 
@@ -529,6 +548,7 @@ function updateDateView() {
         var d = new Date(dateStr);
         renderDate.render(d);
     }
+    //toggleDateListEditIcon(true);
 }
 function day_init() {
     updateDateView();
